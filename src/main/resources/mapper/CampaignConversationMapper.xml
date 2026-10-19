@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignConversationMapper">
+
+    <!--
+      ensureConversation — INSERT a conversation row if one does not already exist for the key.
+      The row is created with no session data: reserved=FALSE, revision=0, all session columns NULL.
+    -->
+    <insert id="ensureConversation">
+        INSERT INTO campaign_conversation (tenant_id, program_id, user_id, conversation_id, run_id,
+               reserved, revision, session_format, session_hash, session_bytes, created_at,
+               updated_at, expires_at)
+        VALUES (#{tenantId}, #{programId}, #{userId}, #{conversationId}, #{runId},
+                FALSE, 0, NULL, NULL, NULL,
+                #{createdAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{updatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE})
+        ON CONFLICT (tenant_id, program_id, user_id, conversation_id, run_id) DO NOTHING
+    </insert>
+
+    <!--
+      lockConversation — Acquire a row-level lock on the conversation row and read its current state.
+      The FOR UPDATE lock is held until the transaction commits or rolls back.
+    -->
+    <select id="lockConversation" resultType="com.company.campaign.persistence.entity.CampaignConversationEntity">
+        SELECT reserved, revision, session_format, session_hash, session_bytes
+          FROM campaign_conversation
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+           FOR UPDATE
+    </select>
+
+    <!--
+      readConversationForReserve — Read the reserved flag and session_hash under a row lock during reservation.
+    -->
+    <select id="readConversationForReserve" resultType="java.util.Map">
+        SELECT reserved, session_hash
+          FROM campaign_conversation
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+           FOR UPDATE
+    </select>
+
+    <!--
+      reserveConversation — Atomically reserve a conversation row, clearing any prior session state.
+    -->
+    <update id="reserveConversation">
+        UPDATE campaign_conversation
+           SET reserved = TRUE,
+               revision = 0,
+               session_format = NULL,
+               session_hash = NULL,
+               session_bytes = NULL,
+               created_at = #{createdAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+               updated_at = #{updatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+               expires_at = #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+    </update>
+
+    <!--
+      touchConversation — Compare-and-set update: advances the session only if the revision in the database
+      matches the revision read at open time.  Zero rows updated means a stale write, which the caller must
+      detect and refuse.
+    -->
+    <update id="touchConversation">
+        UPDATE campaign_conversation
+           SET revision = #{revision},
+               session_format = #{sessionFormat},
+               session_hash = #{sessionHash},
+               session_bytes = #{sessionBytes, jdbcType=BINARY},
+               updated_at = #{updatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+               expires_at = #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+           AND revision = #{expectedRevision}
+    </update>
+
+    <!--
+      countConversations — Count live conversations for one trusted boundary, excluding one key and
+      ordering by expiry so the caller can decide eviction.
+    -->
+    <select id="countConversations" resultType="java.lang.String">
+        SELECT conversation_id
+          FROM campaign_conversation
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND expires_at &gt; #{now, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+           AND NOT (conversation_id = #{excludeConversationId} AND run_id = #{excludeRunId})
+         ORDER BY expires_at ASC
+         LIMIT #{limit}
+    </select>
+
+    <!--
+      listConversations — List live conversations for one trusted boundary in reverse chronological order.
+    -->
+    <select id="listConversations" resultType="com.company.campaign.persistence.entity.CampaignConversationEntity">
+        SELECT conversation_id, run_id, revision, session_format, session_hash, session_bytes,
+               created_at, updated_at
+          FROM campaign_conversation
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND expires_at &gt; #{now, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+           AND (reserved = TRUE OR session_bytes IS NOT NULL)
+         ORDER BY updated_at DESC, conversation_id ASC, run_id ASC
+         LIMIT #{limit}
+    </select>
+
+    <!--
+      readConversation — Read one conversation row without a row lock.
+    -->
+    <select id="readConversation" resultType="com.company.campaign.persistence.entity.CampaignConversationEntity">
+        SELECT reserved, revision, session_format, session_hash, session_bytes
+          FROM campaign_conversation
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+    </select>
+
+    <!--
+      sweepConversations — Remove expired conversation rows in one bounded batch.
+      Uses ctid-based subquery delete with LIMIT so each cleanup is small and scoped.
+    -->
+    <delete id="sweepConversations">
+        DELETE FROM campaign_conversation
+         WHERE ctid IN (
+               SELECT ctid
+                 FROM campaign_conversation
+                WHERE tenant_id = #{tenantId}
+                  AND program_id = #{programId}
+                  AND user_id = #{userId}
+                  AND expires_at &lt;= #{sweepBefore, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+                ORDER BY expires_at ASC
+                LIMIT #{limit})
+    </delete>
+
+    <!--
+      sweepOutcomes — Remove expired outcome rows for one conversation in one bounded batch.
+    -->
+    <delete id="sweepOutcomes">
+        DELETE FROM campaign_conversation_outcome
+         WHERE ctid IN (
+               SELECT ctid
+                 FROM campaign_conversation_outcome
+                WHERE tenant_id = #{tenantId}
+                  AND program_id = #{programId}
+                  AND user_id = #{userId}
+                  AND conversation_id = #{conversationId}
+                  AND run_id = #{runId}
+                  AND expires_at &lt;= #{sweepBefore, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+                ORDER BY expires_at ASC
+                LIMIT #{limit})
+    </delete>
+
+    <!--
+      sweepCreateLedger — Remove expired create-ledger rows for one trusted boundary,
+      but only when the conversation they reserved no longer exists.
+    -->
+    <delete id="sweepCreateLedger">
+        DELETE FROM campaign_conversation_create
+         WHERE ctid IN (
+               SELECT ledger.ctid
+                 FROM campaign_conversation_create ledger
+                WHERE ledger.tenant_id = #{tenantId}
+                  AND ledger.program_id = #{programId}
+                  AND ledger.user_id = #{userId}
+                  AND ledger.expires_at &lt;= #{sweepBefore, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+                  AND NOT EXISTS (SELECT 1 FROM campaign_conversation live
+                                   WHERE live.tenant_id = ledger.tenant_id
+                                     AND live.program_id = ledger.program_id
+                                     AND live.user_id = ledger.user_id
+                                     AND live.conversation_id = ledger.conversation_id
+                                     AND live.run_id = ledger.run_id)
+                ORDER BY ledger.expires_at ASC
+                LIMIT #{limit})
+    </delete>
+
+    <!--
+      insertCreateLedger — Record the create-idempotency entry.  A conflict (same create key) is a no-op;
+      the caller retries with readCreateLedger to decide whether it is a replay or a conflict.
+    -->
+    <insert id="insertCreateLedger">
+        INSERT INTO campaign_conversation_create (tenant_id, program_id, user_id, create_key,
+               fingerprint, conversation_id, run_id, created_at, expires_at)
+        VALUES (#{tenantId}, #{programId}, #{userId}, #{createKey},
+                #{fingerprint}, #{conversationId}, #{runId},
+                #{createdAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE})
+        ON CONFLICT (tenant_id, program_id, user_id, create_key) DO NOTHING
+    </insert>
+
+    <!--
+      readCreateLedger — Read the create-ledger row under a row lock so the caller can verify the fingerprint
+      and recover the reserved identity.
+    -->
+    <select id="readCreateLedger" resultType="java.util.Map">
+        SELECT fingerprint, conversation_id, run_id
+          FROM campaign_conversation_create
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND create_key = #{createKey}
+           FOR UPDATE
+    </select>
+
+    <!--
+      readOutcome — Read one stored idempotency outcome for one turn of one conversation.
+    -->
+    <select id="readOutcome" resultType="java.util.Map">
+        SELECT fingerprint, result_hash, result_bytes
+          FROM campaign_conversation_outcome
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+           AND idempotency_key = #{idempotencyKey}
+    </select>
+
+    <!--
+      countOutcomes — Count the idempotency outcomes stored for one conversation, ordered by creation time.
+    -->
+    <select id="countOutcomes" resultType="java.lang.String">
+        SELECT idempotency_key
+          FROM campaign_conversation_outcome
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND user_id = #{userId}
+           AND conversation_id = #{conversationId}
+           AND run_id = #{runId}
+         ORDER BY created_at ASC
+         LIMIT #{limit}
+    </select>
+
+    <!--
+      writeOutcome — Upsert one idempotency outcome.  An existing row for the same key is overwritten
+      with the new fingerprint, result hash, result bytes and timestamps.
+    -->
+    <insert id="writeOutcome">
+        INSERT INTO campaign_conversation_outcome (tenant_id, program_id, user_id, conversation_id,
+               run_id, idempotency_key, fingerprint, result_hash, result_bytes, created_at,
+               expires_at)
+        VALUES (#{tenantId}, #{programId}, #{userId}, #{conversationId},
+                #{runId}, #{idempotencyKey}, #{fingerprint}, #{resultHash},
+                #{resultBytes, jdbcType=BINARY},
+                #{createdAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE})
+        ON CONFLICT (tenant_id, program_id, user_id, conversation_id, run_id, idempotency_key)
+        DO UPDATE SET fingerprint = EXCLUDED.fingerprint,
+                      result_hash = EXCLUDED.result_hash,
+                      result_bytes = EXCLUDED.result_bytes,
+                      created_at = EXCLUDED.created_at,
+                      expires_at = EXCLUDED.expires_at
+    </insert>
+
+    <!--
+      deleteOldestOutcome — Evict the oldest idempotency outcome for one conversation.
+      Called when the per-conversation outcome bound is about to be exceeded.
+    -->
+    <delete id="deleteOldestOutcome">
+        DELETE FROM campaign_conversation_outcome
+         WHERE ctid IN (
+               SELECT ctid
+                 FROM campaign_conversation_outcome
+                WHERE tenant_id = #{tenantId}
+                  AND program_id = #{programId}
+                  AND user_id = #{userId}
+                  AND conversation_id = #{conversationId}
+                  AND run_id = #{runId}
+                ORDER BY created_at ASC
+                LIMIT #{limit})
+    </delete>
+
+</mapper>

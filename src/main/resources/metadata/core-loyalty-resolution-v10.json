@@ -1,0 +1,33 @@
+{
+  "policyVersion": "core-loyalty-resolution/10",
+  "reportingCurrencyDefaultId": "reporting.currency",
+  "conceptDefinitionIds": {
+    "AVAILABLE_POINTS": "member.available_points",
+    "BIRTH_MONTH": "member.birth_month",
+    "CATEGORY_CODE": "order_item.category_code",
+    "CATEGORY_NAME": "order_item.category_name",
+    "CURRENT_TIER": "member.current_tier",
+    "GROSS_PURCHASE_AMOUNT": "order.gross_amount_sum",
+    "HISTORICAL_TIER": "tier_history.tier",
+    "PAID_PURCHASE_AMOUNT": "order.paid_amount_sum",
+    "POINT_ACTIVITY_COUNT": "point.entry_count",
+    "POSITIVE_ORDER_COUNT": "order.positive_count",
+    "PRODUCT_NAME": "order_item.product_name",
+    "PURCHASED_ITEM_PAID_AMOUNT": "order_item.line_paid_amount_sum",
+    "PURCHASED_ITEM_QUANTITY": "order_item.quantity_sum",
+    "SKU_CODE": "order_item.sku_code",
+    "TIER_EFFECTIVE_FROM": "tier_history.effective_from",
+    "TIER_EFFECTIVE_TO": "tier_history.effective_to",
+    "TIER_QUALIFICATION_POINTS": "member.tier_qualification_points",
+    "WECHAT_BINDING": "member.wechat_bound",
+    "RETURN_ORDER_COUNT": "order.return_count",
+    "RETURN_PAID_AMOUNT": "order.return_paid_amount_sum",
+    "SUCCESSFUL_COUPON_SEND_COUNT": "coupon.successful_send_count",
+    "GIFT_REDEMPTION_COUNT": "redemption.count",
+    "PREFERRED_STORE_CODE": "member.preferred_store_code",
+    "PREFERRED_STORE_NAME": "member.preferred_store_name",
+    "LATEST_POSITIVE_ORDER_SERVICE_BA_CODE": "member.latest_positive_order_service_ba_code",
+    "LATEST_POSITIVE_ORDER_SERVICE_BA_NAME": "member.latest_positive_order_service_ba_name",
+    "REGISTRATION_TIME": "member.registered_at"
+  }
+}

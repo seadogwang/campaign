@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.ReadinessEvidenceMapper">
+
+    <!--
+      selectMaterialHash — Read the material hash of an existing evidence row by its identity hash.
+      Used to decide whether an incoming append is a duplicate (same hash) or a conflict (different hash).
+    -->
+    <select id="selectMaterialHash" resultType="java.lang.String">
+        SELECT material_hash
+          FROM readiness_evidence
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+           AND identity_hash = #{identityHash}
+    </select>
+
+    <!--
+      insertEvidence — Append one readiness evidence row.
+      Every column is a bounded scalar or hash; no column carries a serialized Java object.
+    -->
+    <insert id="insertEvidence">
+        INSERT INTO readiness_evidence (tenant_id, program_id, environment, evidence_id, format_version,
+               requirement_code, status, origin, subject, version_ref, evidence_hash,
+               evidence_reference, production_gate_evidence, reason_code, observed_at, expires_at,
+               identity_hash, material_hash, committed_revision)
+        VALUES (#{tenantId}, #{programId}, #{environment}, #{evidenceId}, #{formatVersion},
+                #{requirementCode}, #{status}, #{origin}, #{subject}, #{versionRef}, #{evidenceHash},
+                #{evidenceReference}, #{productionGateEvidence},
+                #{reasonCode, jdbcType=VARCHAR},
+                #{observedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{identityHash}, #{materialHash}, #{committedRevision})
+    </insert>
+
+    <!--
+      selectEvidenceByRequirement — Read all evidence rows for one requirement in one scope.
+      Ordered by evidence_id so the caller always sees a stable sequence.
+    -->
+    <select id="selectEvidenceByRequirement"
+            resultType="com.company.campaign.persistence.entity.ReadinessEvidenceEntity">
+        SELECT evidence_id, format_version, requirement_code, status, origin, subject, version_ref,
+               evidence_hash, evidence_reference, production_gate_evidence, reason_code, observed_at,
+               expires_at, identity_hash, material_hash
+          FROM readiness_evidence
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+           AND requirement_code = #{requirementCode}
+         ORDER BY evidence_id ASC
+    </select>
+
+</mapper>

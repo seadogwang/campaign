@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignBusinessResourceMapper">
+
+    <resultMap id="CampaignBusinessResourceResultMap"
+               type="com.company.campaign.persistence.entity.CampaignBusinessResourceEntity">
+        <result column="resource_type"      property="resourceType"/>
+        <result column="resource_code"      property="resourceCode"/>
+        <result column="display_name"       property="displayName"/>
+        <result column="aliases"            property="aliases"
+                typeHandler="com.company.campaign.persistence.PostgresTextArrayTypeHandler"/>
+        <result column="enabled"            property="enabled"/>
+        <result column="runtime_available"  property="runtimeAvailable"/>
+        <result column="integration_key"    property="integrationKey"/>
+    </resultMap>
+
+    <!--
+      discoverResources — Read all business resources for one tenant / program boundary,
+      ordered by type, sort order and code.  Safe for read-only connections.
+    -->
+    <select id="discoverResources" resultMap="CampaignBusinessResourceResultMap">
+        SELECT resource_type, resource_code, display_name, aliases,
+               enabled, runtime_available, integration_key
+          FROM campaign_business_resource
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+         ORDER BY resource_type, sort_order, resource_code
+    </select>
+
+</mapper>

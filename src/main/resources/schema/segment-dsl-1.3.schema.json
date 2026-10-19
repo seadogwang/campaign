@@ -1,0 +1,584 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://campaign.company.example/schema/segment-dsl-1.3.schema.json",
+  "title": "Campaign Typed Segment DSL 1.3",
+  "description": "Closed editable Segment DSL document contract. The Java contracts in com.company.campaign.segment.dsl are authoritative where JSON Schema cannot express a cross-tree invariant; see segment-dsl-1.3.java-invariants.md.",
+  "x-segment-dsl-schema-version": "1.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "subject",
+    "metadataSnapshotId",
+    "metadataSnapshotVersion",
+    "metadataSchemaVersion",
+    "metadataContentHash",
+    "predicate",
+    "editableDslHash"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "1.3"
+    },
+    "subject": {
+      "enum": ["MEMBER", "ORDER", "EVENT", "ACCOUNT"]
+    },
+    "metadataSnapshotId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "metadataSnapshotVersion": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "metadataSchemaVersion": {
+      "const": "1.0"
+    },
+    "metadataContentHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "editableDslHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "predicate": {
+      "$ref": "#/$defs/predicate"
+    }
+  },
+  "$defs": {
+    "referenceId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "operator": {
+      "enum": [
+        "EQUAL",
+        "NOT_EQUAL",
+        "IN",
+        "NOT_IN",
+        "GREATER_THAN",
+        "GREATER_OR_EQUAL",
+        "LESS_THAN",
+        "LESS_OR_EQUAL",
+        "IS_NULL",
+        "IS_NOT_NULL",
+        "BETWEEN",
+        "CONTAINS",
+        "NOT_CONTAINS",
+        "STARTS_WITH",
+        "ENDS_WITH"
+      ]
+    },
+    "operatorNull": {
+      "enum": ["IS_NULL", "IS_NOT_NULL"]
+    },
+    "operatorList": {
+      "enum": ["IN", "NOT_IN"]
+    },
+    "operatorRange": {
+      "enum": ["BETWEEN"]
+    },
+    "operatorScalar": {
+      "enum": [
+        "EQUAL",
+        "NOT_EQUAL",
+        "GREATER_THAN",
+        "GREATER_OR_EQUAL",
+        "LESS_THAN",
+        "LESS_OR_EQUAL",
+        "CONTAINS",
+        "NOT_CONTAINS",
+        "STARTS_WITH",
+        "ENDS_WITH"
+      ]
+    },
+    "predicate": {
+      "oneOf": [
+        {"$ref": "#/$defs/predicateAll"},
+        {"$ref": "#/$defs/predicateAny"},
+        {"$ref": "#/$defs/predicateNot"},
+        {"$ref": "#/$defs/predicateAttribute"},
+        {"$ref": "#/$defs/predicateMetric"},
+        {"$ref": "#/$defs/predicateMetricExpression"},
+        {"$ref": "#/$defs/predicateExists"},
+        {"$ref": "#/$defs/predicateAudienceReference"}
+      ]
+    },
+    "predicateAudienceReference": {
+      "description": "A leaf that pins one exact immutable Audience Version. Every trusted fact about it - owner tenant and program, root subject, effective DataScope, availability, retention state and dependencies - is resolved server-side from the host-owned version catalog and is deliberately absent from the document. No name, query, SQL, permission, canonical byte or mutable current/latest pointer is representable.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "audienceId", "versionId", "versionHash"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "AUDIENCE_REFERENCE"},
+        "audienceId": {"$ref": "#/$defs/referenceId"},
+        "versionId": {"$ref": "#/$defs/referenceId"},
+        "versionHash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      }
+    },
+    "predicateAll": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "children"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "ALL"},
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/predicate"}
+        }
+      }
+    },
+    "predicateAny": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "children"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "ANY"},
+        "children": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/predicate"}
+        }
+      }
+    },
+    "predicateNot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "child"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "NOT"},
+        "child": {"$ref": "#/$defs/predicate"}
+      }
+    },
+    "predicateAttribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "attributeId", "operator"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "ATTRIBUTE"},
+        "attributeId": {"$ref": "#/$defs/referenceId"},
+        "operator": {"$ref": "#/$defs/operator"},
+        "value": {"$ref": "#/$defs/typedValue"}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorNull"}}},
+          "then": {"not": {"required": ["value"]}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorList"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueList"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorRange"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueRange"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorScalar"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/scalarValue"}}}
+        }
+      ]
+    },
+    "predicateMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "metricId", "window", "operator"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "METRIC"},
+        "metricId": {"$ref": "#/$defs/referenceId"},
+        "window": {"$ref": "#/$defs/timeWindow"},
+        "scopeFilters": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/metricScopeFilter"}
+        },
+        "operator": {"$ref": "#/$defs/operator"},
+        "value": {"$ref": "#/$defs/typedValue"}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorNull"}}},
+          "then": {"not": {"required": ["value"]}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorList"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueList"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorRange"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueRange"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorScalar"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/scalarValue"}}}
+        }
+      ]
+    },
+    "predicateMetricExpression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "expression", "window", "operator", "value"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "METRIC_EXPRESSION"},
+        "expression": {"$ref": "#/$defs/metricExpression"},
+        "window": {
+          "oneOf": [
+            {"$ref": "#/$defs/windowRolling"},
+            {"$ref": "#/$defs/windowLifetime"},
+            {"$ref": "#/$defs/windowFixed"}
+          ]
+        },
+        "operator": {
+          "enum": [
+            "EQUAL", "NOT_EQUAL", "GREATER_THAN", "GREATER_OR_EQUAL", "LESS_THAN", "LESS_OR_EQUAL"
+          ]
+        },
+        "value": {"$ref": "#/$defs/scalarValue"}
+      }
+    },
+    "metricExpression": {
+      "oneOf": [
+        {"$ref": "#/$defs/metricExpressionRef"},
+        {"$ref": "#/$defs/metricExpressionAdd"},
+        {"$ref": "#/$defs/metricExpressionSubtract"},
+        {"$ref": "#/$defs/metricExpressionMultiply"},
+        {"$ref": "#/$defs/metricExpressionDivide"}
+      ]
+    },
+    "metricExpressionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "metricId"],
+      "properties": {
+        "kind": {"const": "METRIC_REF"},
+        "metricId": {"$ref": "#/$defs/referenceId"}
+      }
+    },
+    "metricExpressionAdd": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "operands"],
+      "properties": {
+        "kind": {"const": "ADD"},
+        "operands": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/metricExpression"}
+        }
+      }
+    },
+    "metricExpressionSubtract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "left", "right"],
+      "properties": {
+        "kind": {"const": "SUBTRACT"},
+        "left": {"$ref": "#/$defs/metricExpression"},
+        "right": {"$ref": "#/$defs/metricExpression"}
+      }
+    },
+    "metricExpressionMultiply": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "left", "right"],
+      "properties": {
+        "kind": {"const": "MULTIPLY"},
+        "left": {"$ref": "#/$defs/metricExpression"},
+        "right": {"$ref": "#/$defs/metricExpression"}
+      }
+    },
+    "metricExpressionDivide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "left", "right", "zeroDenominator"],
+      "properties": {
+        "kind": {"const": "DIVIDE"},
+        "left": {"$ref": "#/$defs/metricExpression"},
+        "right": {"$ref": "#/$defs/metricExpression"},
+        "zeroDenominator": {"const": "EXCLUDED"}
+      }
+    },
+    "predicateExists": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodeId", "type", "relationId", "window", "predicate"],
+      "properties": {
+        "nodeId": {"$ref": "#/$defs/referenceId"},
+        "type": {"const": "EXISTS"},
+        "relationId": {"$ref": "#/$defs/referenceId"},
+        "window": {"$ref": "#/$defs/timeWindow"},
+        "predicate": {"$ref": "#/$defs/predicate"}
+      }
+    },
+    "typedValue": {
+      "oneOf": [
+        {"$ref": "#/$defs/valueString"},
+        {"$ref": "#/$defs/valueInteger"},
+        {"$ref": "#/$defs/valueDecimal"},
+        {"$ref": "#/$defs/valueBoolean"},
+        {"$ref": "#/$defs/valueDate"},
+        {"$ref": "#/$defs/valueDateTime"},
+        {"$ref": "#/$defs/valueEnum"},
+        {"$ref": "#/$defs/valueMoney"},
+        {"$ref": "#/$defs/valueList"},
+        {"$ref": "#/$defs/valueRange"}
+      ]
+    },
+    "scalarValue": {
+      "oneOf": [
+        {"$ref": "#/$defs/valueString"},
+        {"$ref": "#/$defs/valueInteger"},
+        {"$ref": "#/$defs/valueDecimal"},
+        {"$ref": "#/$defs/valueBoolean"},
+        {"$ref": "#/$defs/valueDate"},
+        {"$ref": "#/$defs/valueDateTime"},
+        {"$ref": "#/$defs/valueEnum"},
+        {"$ref": "#/$defs/valueMoney"}
+      ]
+    },
+    "valueString": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "STRING"},
+        "value": {"type": "string", "maxLength": 4096}
+      }
+    },
+    "valueInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "INTEGER"},
+        "value": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807
+        }
+      }
+    },
+    "valueDecimal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "DECIMAL"},
+        "value": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        }
+      }
+    },
+    "valueBoolean": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "BOOLEAN"},
+        "value": {"type": "boolean"}
+      }
+    },
+    "valueDate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "DATE"},
+        "value": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"}
+      }
+    },
+    "valueDateTime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "DATETIME"},
+        "value": {
+          "type": "string",
+          "maxLength": 35,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "valueEnum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value"],
+      "properties": {
+        "kind": {"const": "ENUM"},
+        "value": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{0,63}$"}
+      }
+    },
+    "valueMoney": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "amount", "currency"],
+      "properties": {
+        "kind": {"const": "MONEY"},
+        "amount": {
+          "type": "string",
+          "maxLength": 64,
+          "pattern": "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?$"
+        },
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"}
+      }
+    },
+    "valueList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "items"],
+      "properties": {
+        "kind": {"const": "LIST"},
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 512,
+          "items": {"$ref": "#/$defs/scalarValue"}
+        }
+      }
+    },
+    "valueRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "lower", "upper", "includeLower", "includeUpper"],
+      "properties": {
+        "kind": {"const": "RANGE"},
+        "lower": {"$ref": "#/$defs/scalarValue"},
+        "upper": {"$ref": "#/$defs/scalarValue"},
+        "includeLower": {"type": "boolean"},
+        "includeUpper": {"type": "boolean"}
+      }
+    },
+    "metricScopeFilter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["filterId", "attributeId", "operator"],
+      "properties": {
+        "filterId": {"$ref": "#/$defs/referenceId"},
+        "attributeId": {"$ref": "#/$defs/referenceId"},
+        "operator": {"$ref": "#/$defs/operator"},
+        "value": {"$ref": "#/$defs/typedValue"}
+      },
+      "allOf": [
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorNull"}}},
+          "then": {"not": {"required": ["value"]}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorList"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueList"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorRange"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/valueRange"}}}
+        },
+        {
+          "if": {"required": ["operator"], "properties": {"operator": {"$ref": "#/$defs/operatorScalar"}}},
+          "then": {"required": ["value"], "properties": {"value": {"$ref": "#/$defs/scalarValue"}}}
+        }
+      ]
+    },
+    "timeWindow": {
+      "oneOf": [
+        {"$ref": "#/$defs/windowRolling"},
+        {"$ref": "#/$defs/windowLifetime"},
+        {"$ref": "#/$defs/windowFixed"},
+        {"$ref": "#/$defs/windowRelativeToAttribute"},
+        {"$ref": "#/$defs/windowSelectedEvent"},
+        {"$ref": "#/$defs/windowRelativeToEvent"}
+      ]
+    },
+    "windowRolling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "amount", "unit"],
+      "properties": {
+        "type": {"const": "ROLLING"},
+        "amount": {"type": "integer", "minimum": 1, "maximum": 100000},
+        "unit": {"enum": ["DAY", "WEEK"]}
+      }
+    },
+    "windowLifetime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": {"const": "LIFETIME"}
+      }
+    },
+    "windowFixed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "start", "end"],
+      "properties": {
+        "type": {"const": "FIXED"},
+        "start": {
+          "type": "string",
+          "maxLength": 35,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        },
+        "end": {
+          "type": "string",
+          "maxLength": 35,
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,9})?(Z|[+-][0-9]{2}:[0-9]{2})$"
+        }
+      }
+    },
+    "windowRelativeToAttribute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "anchorDefinitionId", "startOffset", "endOffset", "unit"],
+      "properties": {
+        "type": {"const": "RELATIVE_TO_ATTRIBUTE"},
+        "anchorDefinitionId": {"$ref": "#/$defs/referenceId"},
+        "startOffset": {"type": "integer", "minimum": -100000, "maximum": 100000},
+        "endOffset": {"type": "integer", "minimum": -100000, "maximum": 100000},
+        "unit": {"enum": ["DAY", "WEEK"]}
+      }
+    },
+    "windowSelectedEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "selectorId", "selectorScopeFilters"],
+      "properties": {
+        "type": {"const": "SELECTED_EVENT"},
+        "selectorId": {"$ref": "#/$defs/referenceId"},
+        "selectorScopeFilters": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/metricScopeFilter"}
+        }
+      }
+    },
+    "windowRelativeToEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "selectorId", "selectorScopeFilters", "startOffset", "endOffset", "unit", "excludeAnchorEvent"],
+      "properties": {
+        "type": {"const": "RELATIVE_TO_EVENT"},
+        "selectorId": {"$ref": "#/$defs/referenceId"},
+        "selectorScopeFilters": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/metricScopeFilter"}
+        },
+        "startOffset": {"type": "integer", "minimum": -100000, "maximum": 100000},
+        "endOffset": {"type": "integer", "minimum": -100000, "maximum": 100000},
+        "unit": {"enum": ["DAY", "WEEK"]},
+        "excludeAnchorEvent": {"type": "boolean"}
+      }
+    }
+  }
+}

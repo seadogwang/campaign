@@ -1,0 +1,10 @@
+{
+  "registryVersion": "core-loyalty-defaults/7",
+  "entries": [
+    {
+      "defaultId": "reporting.currency",
+      "version": "1",
+      "value": "CNY"
+    }
+  ]
+}

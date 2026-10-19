@@ -1,0 +1,1 @@
+{"caseId":"case-ref-16-cross-program","expectedIssueCodes":["SEGMENT_REFERENCE_PROGRAM_NOT_ALLOWED"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

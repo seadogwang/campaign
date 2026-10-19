@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.3",
+  "skillId": "segment.rule-based",
+  "skillVersion": "1.0.0",
+  "capabilityState": "EXPERIMENTAL",
+  "evidenceClass": "DEVELOPMENT_ONLY",
+  "contractPins": {
+    "agentContractVersion": "segment-agent-contract/1.0",
+    "intentVersion": "1.3",
+    "dslVersion": "1.3",
+    "canonicalizerVersion": "segment-canonicalizer/1.2",
+    "resolverVersion": "segment-intent-resolver/1.0",
+    "validatorVersion": "segment-validator/1.0",
+    "plannerVersion": "segment-query-planner/1.1",
+    "previewContractVersion": "segment-preview/1.0",
+    "toolSchemaVersion": "segment-tool-schema/1.0"
+  },
+  "tools": [
+    {
+      "toolId": "metadata.discover",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    },
+    {
+      "toolId": "intent.resolve",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    },
+    {
+      "toolId": "dsl.validate",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    },
+    {
+      "toolId": "plan.build",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    },
+    {
+      "toolId": "preview.safe",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    },
+    {
+      "toolId": "explanation.grounded",
+      "toolVersion": "1.0",
+      "maxPayloadBytes": 4096
+    }
+  ],
+  "inputDispositions": [
+    "RESOLVED",
+    "NEEDS_INPUT",
+    "UNSUPPORTED",
+    "DENIED",
+    "INVALID"
+  ],
+  "outputDispositions": [
+    "RESOLVED",
+    "NEEDS_INPUT",
+    "UNSUPPORTED",
+    "DENIED",
+    "INVALID"
+  ],
+  "terminalStates": [
+    "NEEDS_INPUT",
+    "UNSUPPORTED",
+    "DENIED",
+    "INVALID",
+    "READY_FOR_PREVIEW"
+  ],
+  "limits": {
+    "maxSteps": 16,
+    "maxToolCalls": 6,
+    "maxToolPayloadBytes": 65536,
+    "maxModelOutputBytes": 262144,
+    "maxUtteranceLength": 4096,
+    "maxConversationTurns": 16
+  },
+  "dataClassification": "INTERNAL",
+  "sampleOutputPermitted": false,
+  "ambiguityStopsAt": "NEEDS_INPUT",
+  "failureBehavior": {
+    "metadataDiscoveryFailure": "SEGMENT_AGENT_METADATA_DISCOVERY_REJECTED",
+    "providerFailure": "SEGMENT_AGENT_PROVIDER_FAILED",
+    "modelOutputFailure": "SEGMENT_AGENT_MODEL_OUTPUT_REJECTED",
+    "resolutionFailure": "SEGMENT_AGENT_RESOLUTION_REJECTED",
+    "compilationFailure": "SEGMENT_AGENT_DSL_COMPILATION_FAILED",
+    "validationFailure": "SEGMENT_AGENT_VALIDATION_REJECTED",
+    "planningFailure": "SEGMENT_AGENT_PLANNING_FAILED",
+    "previewFailure": "SEGMENT_AGENT_PREVIEW_FAILED",
+    "explanationFailure": "SEGMENT_AGENT_EXPLANATION_FAILED",
+    "auditFailure": "SEGMENT_AGENT_AUDIT_UNAVAILABLE"
+  }
+}

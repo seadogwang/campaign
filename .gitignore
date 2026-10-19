@@ -1,0 +1,58 @@
+# Build output
+target/
+.automation/
+.pytest_cache/
+.vite/
+.runtime_logs/
+node_modules/
+
+# Maven Wrapper: the properties file and scripts are committed, the jar is not
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.settings/
+.classpath
+.project
+
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Logs and local artifacts
+*.log
+*.tmp
+.DS_Store
+
+# Frontend (created at T24)
+frontend/node_modules/
+frontend/dist/
+
+# Project documentation and agent task notes are intentionally not published
+docs/
+tasks/
+*.md
+*.markdown
+*.rst
+*.txt
+*.doc
+*.docx
+*.pdf
+*.ppt
+*.pptx
+
+# Runtime prompt/schema assets are executable application resources, not documentation
+!src/main/resources/prompts/*.md
+!src/main/resources/schema/*.md
+
+# Playwright browser-E2E artifacts (created at T26): traces, videos and reports are regenerated per run
+frontend/test-results/
+frontend/playwright-report/
+
+# Generated evaluation reports (T03): reviewed immutables live in evaluation/segment/expected
+evaluation/segment/reports/generated/

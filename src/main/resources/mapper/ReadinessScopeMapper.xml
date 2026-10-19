@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.ReadinessScopeMapper">
+
+    <!--
+      selectRevision — Read the committed revision for one readiness scope.
+    -->
+    <select id="selectRevision" resultType="java.lang.Long">
+        SELECT revision
+          FROM readiness_scope
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+    </select>
+
+    <!--
+      insertScope — Create the scope row at revision 0 if it does not already exist.
+      Safe for concurrent callers: the conflict clause makes it a no-op when the row is already there.
+    -->
+    <insert id="insertScope">
+        INSERT INTO readiness_scope (tenant_id, program_id, environment, revision, updated_at)
+        VALUES (#{tenantId}, #{programId}, #{environment}, #{revision},
+                #{updatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE})
+        ON CONFLICT (tenant_id, program_id, environment) DO NOTHING
+    </insert>
+
+    <!--
+      lockRevision — Read the revision under a row lock so the caller can advance it atomically.
+    -->
+    <select id="lockRevision" resultType="java.lang.Long">
+        SELECT revision
+          FROM readiness_scope
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+           FOR UPDATE
+    </select>
+
+    <!--
+      updateRevision — Bump the committed revision after appending evidence or an assessment.
+    -->
+    <update id="updateRevision">
+        UPDATE readiness_scope
+           SET revision = #{revision},
+               updated_at = #{updatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE}
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+    </update>
+
+</mapper>

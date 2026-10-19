@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignPlanMapper">
+
+    <!--
+      insertPlan — INSERT one immutable plan row.
+      plan_id is the primary key; a duplicate plan_id insert fails at the database level.
+    -->
+    <insert id="insert">
+        INSERT INTO campaign_plan (plan_id, plan_hash, plan_format_version, compiler_version,
+               compiled_at, expires_at, tenant_id, program_id, user_id, campaign_id,
+               base_campaign_revision, base_draft_id, base_draft_revision,
+               fork_base_identity, proposal_hash, manifest_hash,
+               catalog_version, catalog_hash, policy_version, policy_hash,
+               manifest_json, canonical_material_bytes)
+        VALUES (#{planId}, #{planHash}, #{planFormatVersion}, #{compilerVersion},
+                #{compiledAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{tenantId}, #{programId}, #{userId}, #{campaignId, jdbcType=VARCHAR},
+                #{baseCampaignRevision, jdbcType=BIGINT},
+                #{baseDraftId, jdbcType=VARCHAR}, #{baseDraftRevision, jdbcType=BIGINT},
+                #{forkBaseIdentity, jdbcType=VARCHAR},
+                #{proposalHash}, #{manifestHash},
+                #{catalogVersion}, #{catalogHash, jdbcType=VARCHAR},
+                #{policyVersion}, #{policyHash, jdbcType=VARCHAR},
+                #{manifestJson}, #{canonicalMaterialBytes, jdbcType=BINARY})
+    </insert>
+
+    <!--
+      insertPlan — INSERT one immutable plan row with ON CONFLICT (plan_id) DO NOTHING.
+      Used within an atomic plan+binding transaction so a concurrent store of the same plan
+      is idempotent rather than a constraint violation.
+    -->
+    <insert id="insertPlan">
+        INSERT INTO campaign_plan (plan_id, plan_hash, plan_format_version, compiler_version,
+               compiled_at, expires_at, tenant_id, program_id, user_id, campaign_id,
+               base_campaign_revision, base_draft_id, base_draft_revision,
+               fork_base_identity, proposal_hash, manifest_hash,
+               catalog_version, catalog_hash, policy_version, policy_hash,
+               manifest_json, canonical_material_bytes)
+        VALUES (#{planId}, #{planHash}, #{planFormatVersion}, #{compilerVersion},
+                #{compiledAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{expiresAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{tenantId}, #{programId}, #{userId}, #{campaignId, jdbcType=VARCHAR},
+                #{baseCampaignRevision, jdbcType=BIGINT},
+                #{baseDraftId, jdbcType=VARCHAR}, #{baseDraftRevision, jdbcType=BIGINT},
+                #{forkBaseIdentity, jdbcType=VARCHAR},
+                #{proposalHash}, #{manifestHash},
+                #{catalogVersion}, #{catalogHash, jdbcType=VARCHAR},
+                #{policyVersion}, #{policyHash, jdbcType=VARCHAR},
+                #{manifestJson}, #{canonicalMaterialBytes, jdbcType=BINARY})
+        ON CONFLICT (plan_id) DO NOTHING
+    </insert>
+
+    <!--
+      findById — Look up one plan by its deterministic plan_id.
+      This is the host-only retrieval path.
+    -->
+    <select id="findById" resultType="com.company.campaign.persistence.entity.CampaignPlanEntity">
+        SELECT plan_id, plan_hash, plan_format_version, compiler_version,
+               compiled_at, expires_at, tenant_id, program_id, user_id, campaign_id,
+               base_campaign_revision, base_draft_id, base_draft_revision,
+               fork_base_identity, proposal_hash, manifest_hash,
+               catalog_version, catalog_hash, policy_version, policy_hash,
+               manifest_json, canonical_material_bytes, created_at
+          FROM campaign_plan
+         WHERE plan_id = #{planId}
+    </select>
+
+</mapper>

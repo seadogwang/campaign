@@ -1,0 +1,1608 @@
+{
+    "attributes":  [
+                       {
+                           "aliases":  [
+                                           "偏好门店编号"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "仅表示偏好门店业务编码；用户只说‘偏好门店’而未说明名称或编码时，必须在本定义与 member.preferred_store_name 之间澄清，不能根据值的外观猜测。",
+                           "displayName":  "偏好门店编码",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.preferred_store_code",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "偏好门店名称"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "表示偏好门店的主数据名称；用户只说‘偏好门店’而未说明名称或编码时，必须在本定义与 member.preferred_store_code 之间澄清，不能根据值的外观猜测。",
+                           "displayName":  "偏好门店主数据名称",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.preferred_store_name",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "最近一笔订单的服务BA编码",
+                                           "最近一笔订单服务BA编码",
+                                           "最近一笔正单的服务BA编码",
+                                           "最近一笔正单服务BA编码"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "表示数据水位之前最近一笔正单的服务BA编码；未限定订单方向的‘最近一笔订单’默认指最近正单。用户只说‘服务BA’而未说明名称或编码时，必须在本定义与 member.latest_positive_order_service_ba_name 之间澄清，不能根据值的外观猜测。按 paid_at 降序、order_id 降序唯一取一条；没有正单或该单没有服务BA时为 NULL。",
+                           "displayName":  "最近正单服务BA编码",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.latest_positive_order_service_ba_code",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "最近一笔订单的服务BA名称",
+                                           "最近一笔订单服务BA名称",
+                                           "最近一笔正单的服务BA名称",
+                                           "最近一笔正单服务BA名称"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "表示数据水位之前最近一笔正单的服务BA名称；未限定订单方向的‘最近一笔订单’默认指最近正单。用户只说‘服务BA’而未说明名称或编码时，必须在本定义与 member.latest_positive_order_service_ba_code 之间澄清，不能根据值的外观猜测。按 paid_at 降序、order_id 降序唯一取一条；没有正单或该单没有服务BA时为 NULL。",
+                           "displayName":  "最近正单服务BA名称",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.latest_positive_order_service_ba_name",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "兑换积分余额",
+                                           "可用积分",
+                                           "积分",
+                                           "积分余额"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "GREATER_THAN",
+                                                    "GREATER_OR_EQUAL",
+                                                    "LESS_THAN",
+                                                    "LESS_OR_EQUAL",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "INTEGER",
+                           "disambiguation":  "未限定类型的“积分”默认指可兑换积分；当前余额不能替代期间获得、使用或过期积分。",
+                           "displayName":  "当前可兑换积分",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.available_points",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "入会时间",
+                                           "注册时间"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "GREATER_THAN",
+                                                    "GREATER_OR_EQUAL",
+                                                    "LESS_THAN",
+                                                    "LESS_OR_EQUAL",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "TIMESTAMP",
+                           "disambiguation":  "由会员基本信息 create_date 与 create_time 严格组合，并按项目时区解释；近 N 天表示 [asOf-N天, asOf] 的注册时间范围。非法日期或时间进入质量隔离，不能使用 increment_date 代替。",
+                           "displayName":  "会员注册时间",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.registered_at",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "出生月份",
+                                           "生日月"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "INTEGER",
+                           "disambiguation":  "自然月 1 到 12。",
+                           "displayName":  "生日月份",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.birth_month",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "会员等级",
+                                           "卡级",
+                                           "当前等级"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "ENUM",
+                           "disambiguation":  "只表示 asOf 时刻当前等级；历史等级必须使用 tier_history.tier。原始编码为 10=普卡、20=银卡、30=金卡、40=白金卡。",
+                           "displayName":  "会员当前等级",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+                                              {
+                                                  "aliases":  [
+                                                                  "10",
+                                                                  "普卡",
+                                                                  "普通会员"
+                                                              ],
+                                                  "code":  "STANDARD"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "20",
+                                                                  "Silver",
+                                                                  "银卡"
+                                                              ],
+                                                  "code":  "SILVER"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "30",
+                                                                  "Gold",
+                                                                  "金卡"
+                                                              ],
+                                                  "code":  "GOLD"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "40",
+                                                                  "Platinum",
+                                                                  "白金卡"
+                                                              ],
+                                                  "code":  "PLATINUM"
+                                              }
+                                          ],
+                           "id":  "member.current_tier",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "升级积分",
+                                           "定级积分",
+                                           "等级积分"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "GREATER_THAN",
+                                                    "GREATER_OR_EQUAL",
+                                                    "LESS_THAN",
+                                                    "LESS_OR_EQUAL",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "INTEGER",
+                           "disambiguation":  "仅用于会员定级，不可用于兑换；不得与可兑换积分相加。",
+                           "displayName":  "当前定级积分",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.tier_qualification_points",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "已绑微信",
+                                           "微信已绑定",
+                                           "微信绑定",
+                                           "绑定微信"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "BOOLEAN",
+                           "disambiguation":  "表示 asOf 时刻至少存在一个当前有效的微信绑定；解绑或未知不匹配。",
+                           "displayName":  "已绑定微信",
+                           "entityVersion":  {
+                                                 "entity":  "MEMBER",
+                                                 "schemaVersion":  "1.2"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "member.wechat_bound",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "MEMBER"
+                       },
+                       {
+                           "aliases":  [
+                                           "品类编码"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "字段选择与字段值是不同语义；不得把商品名称复制成编码值。",
+                           "displayName":  "商品分类编码",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.4"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "order_item.category_code",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "分类名称",
+                                           "品类",
+                                           "商品分类",
+                                           "商品品类"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "字段选择与字段值是不同语义；不得把商品名称复制成编码值。",
+                           "displayName":  "商品品类名称",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.4"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "order_item.category_name",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "产品名称"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "字段选择与字段值是不同语义；不得把商品名称复制成编码值。",
+                           "displayName":  "商品名称",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.4"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "order_item.product_name",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "item_code",
+                                           "产品编码",
+                                           "商品编码",
+                                           "规格编码",
+                                           "货号"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "STRING",
+                           "disambiguation":  "字段选择与字段值是不同语义；不得把商品名称复制成编码值。",
+                           "displayName":  "SKU编码",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.4"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "order_item.sku_code",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  {
+                                                   "caseSensitivity":  "CASE_SENSITIVE",
+                                                   "locale":  null,
+                                                   "localeMode":  "LOCALE_NEUTRAL",
+                                                   "normalization":  "NONE"
+                                               },
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "升级时间",
+                                           "等级开始时间"
+                                       ],
+                           "allowedOperators":  [
+                                                    "GREATER_THAN",
+                                                    "LESS_THAN",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "TIMESTAMP",
+                           "disambiguation":  null,
+                           "displayName":  "等级生效时间",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.3"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "tier_history.effective_from",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "等级截止时间",
+                                           "等级结束时间"
+                                       ],
+                           "allowedOperators":  [
+                                                    "GREATER_THAN",
+                                                    "LESS_THAN",
+                                                    "IS_NULL",
+                                                    "IS_NOT_NULL",
+                                                    "BETWEEN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "TIMESTAMP",
+                           "disambiguation":  null,
+                           "displayName":  "等级失效时间",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.3"
+                                             },
+                           "enumValues":  [
+
+                                          ],
+                           "id":  "tier_history.effective_to",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "UNKNOWN_VALUE",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "EVENT"
+                       },
+                       {
+                           "aliases":  [
+                                           "历史卡级",
+                                           "曾经等级"
+                                       ],
+                           "allowedOperators":  [
+                                                    "EQUAL",
+                                                    "NOT_EQUAL",
+                                                    "IN",
+                                                    "NOT_IN"
+                                                ],
+                           "currencySemantics":  "NOT_APPLICABLE",
+                           "dataType":  "ENUM",
+                           "disambiguation":  "一条记录表示一个等级生效区间；区间查询必须保留 effective_from/effective_to 语义。原始编码为 10=普卡、20=银卡、30=金卡、40=白金卡。",
+                           "displayName":  "历史会员等级",
+                           "entityVersion":  {
+                                                 "entity":  "EVENT",
+                                                 "schemaVersion":  "1.3"
+                                             },
+                           "enumValues":  [
+                                              {
+                                                  "aliases":  [
+                                                                  "10",
+                                                                  "普卡",
+                                                                  "普通会员"
+                                                              ],
+                                                  "code":  "STANDARD"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "20",
+                                                                  "Silver",
+                                                                  "银卡"
+                                                              ],
+                                                  "code":  "SILVER"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "30",
+                                                                  "Gold",
+                                                                  "金卡"
+                                                              ],
+                                                  "code":  "GOLD"
+                                              },
+                                              {
+                                                  "aliases":  [
+                                                                  "40",
+                                                                  "Platinum",
+                                                                  "白金卡"
+                                                              ],
+                                                  "code":  "PLATINUM"
+                                              }
+                                          ],
+                           "id":  "tier_history.tier",
+                           "negativeExamples":  [
+
+                                                ],
+                           "nullSemantics":  "EXCLUDED",
+                           "positiveExamples":  [
+
+                                                ],
+                           "stringSemantics":  null,
+                           "subject":  "EVENT"
+                       }
+                   ],
+    "metrics":  [
+                    {
+                        "aggregation":  "SUM",
+                        "aliases":  [
+                                        "订单原始金额"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "SINGLE_CURRENCY_ONLY",
+                        "disambiguation":  "不等于实际支付金额或净支付金额。 用户只说购买金额或消费金额时必须记录 AMBIGUOUS_METRIC_MEANING。",
+                        "displayName":  "订单原始金额合计",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "MONEY"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order.order_type",
+                                                           "values":  [
+                                                                          "POSITIVE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order.gross_amount_sum",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "INCLUDE",
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "SUM",
+                        "aliases":  [
+                                        "实付金额合计"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "SINGLE_CURRENCY_ONLY",
+                        "disambiguation":  "实际支付口径，不扣除后续退款。 用户只说购买金额或消费金额时必须记录 AMBIGUOUS_METRIC_MEANING。",
+                        "displayName":  "实际支付金额合计",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "MONEY"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order.order_type",
+                                                           "values":  [
+                                                                          "POSITIVE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order.paid_amount_sum",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "INCLUDE",
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "COUNT",
+                    "aliases":  [
+                                    "有效正单数",
+                                    "有正单",
+                                    "下过正单",
+                                    "正单",
+                                    "正单数"
+                                ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "有正单表示正单数量 GREATER_THAN 0；数量和金额均为正值，必须按订单类型过滤。",
+                        "displayName":  "正单数量",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order.order_type",
+                                                           "values":  [
+                                                                          "POSITIVE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order.positive_count",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.orders",
+                        "resultType":  "INTEGER",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "SUM",
+                        "aliases":  [
+                                        "品类累计金额",
+                                        "商品累计金额",
+                                        "商品购买金额",
+                                        "按品类累计金额"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "SINGLE_CURRENCY_ONLY",
+                        "disambiguation":  "按订单明细实收金额汇总；商品或品类条件必须保留在 scopeFilters；字段语义未明确时必须澄清，不能根据值的外观猜测；币种使用已注册的报告币种。",
+                        "displayName":  "商品明细实付金额合计",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "MONEY"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order_item.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order_item.order_type",
+                                                           "values":  [
+                                                                          "POSITIVE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order_item.line_paid_amount_sum",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.order_items",
+                        "resultType":  "MONEY",
+                        "scopeFilterDimensions":  [
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.category_code",
+                                                          "domain":  "CATEGORY",
+                                                          "identifierKind":  "CODE"
+                                                      },
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.category_name",
+                                                          "domain":  "CATEGORY",
+                                                          "identifierKind":  "NAME"
+                                                      },
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.product_name",
+                                                          "domain":  "PRODUCT",
+                                                          "identifierKind":  "NAME"
+                                                      },
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.sku_code",
+                                                          "domain":  "PRODUCT",
+                                                          "identifierKind":  "CODE"
+                                                      }
+                                                  ],
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "SUM",
+                        "aliases":  [
+                                        "累计购买数量",
+                                        "购买件数"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "商品条件必须保留在 scopeFilters；购买过表示聚合数量 GREATER_THAN 0。",
+                        "displayName":  "购买商品件数",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order_item.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order_item.order_type",
+                                                           "values":  [
+                                                                          "POSITIVE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order_item.quantity_sum",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.order_items",
+                        "resultType":  "INTEGER",
+                        "scopeFilterDimensions":  [
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.product_name",
+                                                          "domain":  "PRODUCT",
+                                                          "identifierKind":  "NAME"
+                                                      },
+                                                      {
+                                                          "allowedOperators":  [
+                                                                                   "EQUAL",
+                                                                                   "IN"
+                                                                               ],
+                                                          "attributeId":  "order_item.sku_code",
+                                                          "domain":  "PRODUCT",
+                                                          "identifierKind":  "CODE"
+                                                      }
+                                                  ],
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "COUNT",
+                        "aliases":  [
+                                        "有过积分变动",
+                                        "积分变动次数",
+                                        "积分活动次数",
+                                        "积分流水次数"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "未限定类型的积分只统计可兑换积分；有过积分变动表示 COUNT GREATER_THAN 0。",
+                        "displayName":  "可兑换积分变动次数",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "point_entry.occurred_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "point_entry.point_type",
+                                                           "values":  [
+                                                                          "REDEEMABLE"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "point.entry_count",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.point_entries",
+                        "resultType":  "INTEGER",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "COUNT",
+                        "aliases":  [
+                                        "有过退单",
+                                        "退单次数",
+                                        "退货订单数"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "仅统计订单方向为退单的记录；退单数量和金额均为正值，不能根据数值符号判断。",
+                        "displayName":  "退单数量",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order.order_type",
+                                                           "values":  [
+                                                                          "RETURN"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order.return_count",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.orders",
+                        "resultType":  "INTEGER",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "SUM",
+                        "aliases":  [
+                                        "退单金额",
+                                        "退单金额合计",
+                                        "退单实付金额"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "SINGLE_CURRENCY_ONLY",
+                        "disambiguation":  "按退单记录的实际支付金额正值汇总；表示退单方向金额，不表示退款资金来源或净退款金额。",
+                        "displayName":  "退单实付金额合计",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "MONEY"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "order.paid_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "order.order_type",
+                                                           "values":  [
+                                                                          "RETURN"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "order.return_paid_amount_sum",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "COUNT",
+                        "aliases":  [
+                                        "成功发过券",
+                                        "发券成功次数",
+                                        "成功发券记录数"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "仅统计 send_status 规范化为 SUCCESS 的卡券发放记录；未执行和失败不计入。",
+                        "displayName":  "成功发券次数",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "coupon_send.created_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "coupon_send.send_status",
+                                                           "values":  [
+                                                                          "SUCCESS"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "coupon.successful_send_count",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.coupon_sends",
+                        "resultType":  "INTEGER",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    },
+                    {
+                        "aggregation":  "COUNT",
+                        "aliases":  [
+                                        "兑过礼",
+                                        "兑礼次数",
+                                        "礼品兑换次数",
+                                        "兑换礼品次数"
+                                    ],
+                        "allowedOperators":  [
+                                                 "EQUAL",
+                                                 "GREATER_THAN",
+                                                 "GREATER_OR_EQUAL",
+                                                 "LESS_THAN",
+                                                 "LESS_OR_EQUAL",
+                                                 "BETWEEN"
+                                             ],
+                        "currencySemantics":  "NOT_APPLICABLE",
+                        "disambiguation":  "仅统计 payment_time 有效且 flag_type 规范化为 NORMAL 的兑礼记录；测试记录不计入。",
+                        "displayName":  "有效兑礼次数",
+                        "emptySet":  {
+                                         "behavior":  "ZERO",
+                                         "value":  {
+                                                       "canonicalValue":  "0",
+                                                       "dataType":  "INTEGER"
+                                                   }
+                                     },
+                        "entityVersion":  {
+                                              "entity":  "MEMBER",
+                                              "schemaVersion":  "1.2"
+                                          },
+                        "eventTimeField":  "redemption.payment_at",
+                        "eventTimeSemantics":  "EVENT_TIME",
+                        "filter":  {
+                                       "entries":  [
+                                                       {
+                                                           "key":  "redemption.record_type",
+                                                           "values":  [
+                                                                          "NORMAL"
+                                                                      ]
+                                                       }
+                                                   ]
+                                   },
+                        "id":  "redemption.count",
+                        "negativeExamples":  [
+
+                                             ],
+                        "nullSemantics":  "EXCLUDED",
+                        "positiveExamples":  [
+
+                                             ],
+                        "refundTreatment":  "IGNORE",
+                        "relationId":  "member.redemptions",
+                        "resultType":  "INTEGER",
+                        "stringSemantics":  null,
+                        "subject":  "MEMBER",
+                        "supportedWindows":  [
+                                                 "ROLLING",
+                                                 "LIFETIME",
+                                                 "FIXED",
+                                                 "RELATIVE_TO_ATTRIBUTE"
+                                             ],
+                        "windowBoundarySemantics":  "INCLUSIVE_START_EXCLUSIVE_END"
+                    }
+                ],
+    "programId":  "program-dev",
+    "relations":  [
+                      {
+                          "aliases":  [
+                                          "订单商品",
+                                          "购买明细"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  null,
+                          "displayName":  "会员购买明细",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "order_item.paid_at",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.order_items",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "target.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "EVENT",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "EVENT",
+                                                "schemaVersion":  "1.4"
+                                            }
+                      },
+                      {
+                          "aliases":  [
+                                          "订单",
+                                          "购买记录"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  null,
+                          "displayName":  "会员订单",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "order.paid_at",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.orders",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "order.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "ORDER",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "ORDER",
+                                                "schemaVersion":  "1.2"
+                                            }
+                      },
+                      {
+                          "aliases":  [
+                                          "积分变动",
+                                          "积分流水",
+                                          "积分记录"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  null,
+                          "displayName":  "会员积分明细",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "point_entry.occurred_at",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.point_entries",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "target.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "EVENT",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "EVENT",
+                                                "schemaVersion":  "1.5"
+                                            }
+                      },
+                      {
+                          "aliases":  [
+                                          "卡级历史",
+                                          "等级历史"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  null,
+                          "displayName":  "会员等级历史",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "tier_history.effective_from",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.tier_history",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "target.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "EVENT",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "EVENT",
+                                                "schemaVersion":  "1.3"
+                                            }
+                      },
+                      {
+                          "aliases":  [
+                                          "卡券发放",
+                                          "发券记录"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  "发券成功必须使用 coupon.successful_send_count，不能用积分变动代替。",
+                          "displayName":  "会员卡券发放记录",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "coupon_send.created_at",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.coupon_sends",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "coupon_send.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "EVENT",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "EVENT",
+                                                "schemaVersion":  "1.6"
+                                            }
+                      },
+                      {
+                          "aliases":  [
+                                          "兑礼记录",
+                                          "礼品兑换记录"
+                                      ],
+                          "cardinality":  "ONE_TO_MANY",
+                          "disambiguation":  "兑礼事实来自兑礼订单，不得用积分明细中的扣减记录代替。",
+                          "displayName":  "会员兑礼记录",
+                          "emptyRelationSemantics":  "NULL",
+                          "eventTimeCapability":  {
+                                                      "eventTimeField":  "redemption.payment_at",
+                                                      "semantics":  "EVENT_TIME"
+                                                  },
+                          "id":  "member.redemptions",
+                          "negativeExamples":  [
+
+                                               ],
+                          "positiveExamples":  [
+
+                                               ],
+                          "scope":  {
+                                        "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                                        "sourceJoinField":  "member.id",
+                                        "targetJoinField":  "redemption.member_id"
+                                    },
+                          "sourceEntity":  "MEMBER",
+                          "sourceVersion":  {
+                                                "entity":  "MEMBER",
+                                                "schemaVersion":  "1.2"
+                                            },
+                          "targetEntity":  "EVENT",
+                          "targetNullSemantics":  "EXCLUDED",
+                          "targetVersion":  {
+                                                "entity":  "EVENT",
+                                                "schemaVersion":  "1.7"
+                                            }
+                      }
+                  ],
+    "schemaVersion":  "1.0",
+    "snapshotId":  "core-loyalty-metadata",
+    "snapshotVersion":  "10",
+    "tenantId":  "tenant-dev"
+}

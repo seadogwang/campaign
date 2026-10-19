@@ -1,0 +1,5 @@
+export * from './types'
+export * from './fixtureGateway'
+export * from './httpGateway'
+export { FixtureCampaignWorkspaceGateway as FixtureGatewayImpl } from './fixtureGateway'
+export { HttpCampaignWorkspaceGateway as HttpGatewayImpl } from './httpGateway'

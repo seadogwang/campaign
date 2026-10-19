@@ -1,0 +1,1 @@
+{"caseId":"case-ref-18-missing-context","expectedIssueCodes":["SEGMENT_REFERENCE_CONTEXT_MISSING"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

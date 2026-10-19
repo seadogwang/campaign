@@ -1,0 +1,434 @@
+spring:
+  application:
+    name: campaign-ai-builder
+
+# Unified business datasource — the canonical persistence configuration.
+#
+# The single shared business HikariDataSource serves conversation, business resources, production
+# membership, production audit and readiness persistence. One MyBatis-Plus SqlSessionFactory and one
+# DataSourceTransactionManager are bound to it. The development Preview executor retains its own
+# separate read-only pool (campaign.agent.development.preview.postgres.*).
+#
+# Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+# relaxed-binding environment variables, and no credential, URL or production-like value is ever committed:
+#
+#   campaign.datasource.enabled                     CAMPAIGN_DATASOURCE_ENABLED
+#   campaign.datasource.url                         CAMPAIGN_DATASOURCE_URL
+#   campaign.datasource.username                    CAMPAIGN_DATASOURCE_USERNAME
+#   campaign.datasource.password                    CAMPAIGN_DATASOURCE_PASSWORD
+#   campaign.datasource.schema                      CAMPAIGN_DATASOURCE_SCHEMA
+#   campaign.datasource.maximum-pool-size           CAMPAIGN_DATASOURCE_MAXIMUM_POOL_SIZE
+#   campaign.datasource.minimum-idle                CAMPAIGN_DATASOURCE_MINIMUM_IDLE
+#   campaign.datasource.connection-timeout-ms       CAMPAIGN_DATASOURCE_CONNECTION_TIMEOUT_MS
+#   campaign.datasource.validation-timeout-ms       CAMPAIGN_DATASOURCE_VALIDATION_TIMEOUT_MS
+#   campaign.datasource.statement-timeout-ms        CAMPAIGN_DATASOURCE_STATEMENT_TIMEOUT_MS
+#   campaign.datasource.lock-timeout-ms             CAMPAIGN_DATASOURCE_LOCK_TIMEOUT_MS
+#   campaign.datasource.idle-transaction-timeout-ms CAMPAIGN_DATASOURCE_IDLE_TRANSACTION_TIMEOUT_MS
+#
+# When `enabled` is false (the default) the application starts with no DataSource, no Flyway run,
+# no SqlSessionFactory and no persistence bean at all. Every legacy configuration prefix below is a
+# deprecated compatibility bridge that resolves to this same single datasource; conflicting URLs,
+# credentials or schemas between two prefixes fail startup with a clear configuration error.
+# Campaign Agent development, production identity, production audit, production campaign agent and
+# production provider/runtime slices remain independently opt-in through their own enabled flags.
+# T26: real PostgreSQL readiness storage is opt-in and off by default.
+#
+# DEPRECATED: the readiness slice now consumes the unified campaign.datasource. These properties are
+# retained as a compatibility bridge. When campaign.datasource.enabled=true is the canonical way to
+# enable the shared pool, any legacy property here that conflicts with campaign.datasource.* fails
+# startup with a clear configuration error rather than silently choosing between databases.
+#
+# Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+# relaxed-binding environment variables, and no credential, URL or production-like value is ever committed to
+# this repository:
+#
+#   campaign.readiness.postgres.enabled             CAMPAIGN_READINESS_POSTGRES_ENABLED
+#   campaign.readiness.postgres.url                 CAMPAIGN_READINESS_POSTGRES_URL
+#   campaign.readiness.postgres.username            CAMPAIGN_READINESS_POSTGRES_USERNAME
+#   campaign.readiness.postgres.password            CAMPAIGN_READINESS_POSTGRES_PASSWORD
+#   campaign.readiness.postgres.schema              CAMPAIGN_READINESS_POSTGRES_SCHEMA
+#
+# When `enabled` is absent or false the application starts with no DataSource, no migration run and no
+# readiness store, `GET /api/v1/health` reports IN_MEMORY / NOT_RUN / BLOCKED, and `MyBatisPlusReadinessStore` is
+# never wired. The `schema` value must name a dedicated boundary; `public` and the other reserved schemas are
+# refused, cleaning is disabled, and the only migrations that can run are the committed
+# classpath:db/migration assets.
+campaign:
+  datasource:
+    enabled: false
+
+  readiness:
+    postgres:
+      enabled: false
+
+  # T32: the local Campaign Agent development host is opt-in and off by default.
+  #
+  # Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+  # relaxed-binding environment variables, and no credential, URL, model, identity, tenant, program, DataScope,
+  # snapshot or time value is ever committed to this repository:
+  #
+  #   campaign.agent.development.enabled                     CAMPAIGN_AGENT_DEVELOPMENT_ENABLED
+  #   campaign.agent.development.max-conversations           CAMPAIGN_AGENT_DEVELOPMENT_MAX_CONVERSATIONS
+  #   campaign.agent.development.max-outcomes-per-conversation
+  #                                                          CAMPAIGN_AGENT_DEVELOPMENT_MAX_OUTCOMES_PER_CONVERSATION
+  #   campaign.agent.development.retention                   CAMPAIGN_AGENT_DEVELOPMENT_RETENTION
+  #   campaign.agent.development.schema-repair-enabled       CAMPAIGN_AGENT_DEVELOPMENT_SCHEMA_REPAIR_ENABLED
+  #   campaign.agent.development.transcript.enabled          CAMPAIGN_AGENT_DEVELOPMENT_TRANSCRIPT_ENABLED
+  #   campaign.agent.development.transcript.directory        CAMPAIGN_AGENT_DEVELOPMENT_TRANSCRIPT_DIRECTORY
+  #
+  # When `enabled` is absent or false the application starts with no CampaignAgentTurnService bean, no
+  # CampaignAgentConversationService bean, no `/api/v1/campaign-agent/turns` or
+  # `/api/v1/campaign-agent/conversations` route mapping, no conversation registry and no model client, exactly
+  # as before. When it is true, the development host publishes both routes against the accepted T27 Tool
+  # catalog, Capability Packs and Segment integration, the selected conversation store (in-memory by default or
+  # opt-in PostgreSQL), a cryptographically strong server-owned conversation identity source and a clearly named
+  # fixed development identity provider.
+  #
+  # T34: a conversation comes into existence only through `POST /api/v1/campaign-agent/conversations`. The host
+  # resolves the trusted context once, requires an active membership and `campaign.edit`, generates an opaque
+  # identity from its injected source and reserves it atomically at revision zero. The body must be the strict
+  # empty JSON object `{}`: no tenant, program, user, permission, conversation, run, campaign, revision or
+  # trusted instant can be bound by a client. A replay of the same Idempotency-Key returns the same identity,
+  # the same key with a different request fails closed, a colliding identity retries only through an explicit
+  # bounded policy and then fails closed, and a turn can no longer implicitly create an unreserved
+  # conversation. This adds no configuration key of its own.
+  #
+  # T33: the Segment source is resolved with explicit precedence. A host-supplied
+  # DevelopmentSegmentSourceProvider bean always wins. Otherwise, when exactly one host SegmentPreviewPort bean
+  # exists, the host builds the REAL development Segment source over the accepted Segment Agent, the accepted
+  # Segment authoring integration and the accept Campaign Segment adapter, using the same selected model object
+  # as both the Campaign structured transport and the Segment intent model; a transport that cannot also serve
+  # as SegmentIntentModelPort fails startup with a bounded code rather than silently selecting a second model.
+  # With no PreviewPort the honest unavailable Segment source stays, and no fake default Preview is registered.
+  # More than one source provider or more than one Preview port fails startup with a bounded safe error.
+  #
+  # An audience request can therefore resolve end to end in two supported development ways. The explicit
+  # `campaign.agent.development.preview.postgres` integration below supplies its own genuine read-only Preview
+  # port when it is enabled, and a host-supplied SegmentPreviewPort keeps documented precedence over it. Only
+  # when neither exists does the honest unavailable Segment source stay, and no fake default Preview is
+  # registered. No production Preview infrastructure is committed here, and none is invented.
+  #
+  # The conversation registry, the audit sink and the identity are IN-MEMORY and DEVELOPMENT-ONLY: they are not
+  # durable conversation storage, not production audit persistence and not production identity. The development
+  # model settings are read through the same narrow Anthropic-settings boundary the Segment development slice
+  # uses (ANTHROPIC_AUTH_TOKEN, ANTHROPIC_BASE_URL, ANTHROPIC_MODEL); a missing setting fails startup with a
+  # bounded code and never echoes a credential or URL. Production OIDC, a production Preview backend, production
+  # model evidence, Provider delivery/runtime and a production routing-model Provider remain blockers.
+  #
+  # T34B: durable Campaign conversation persistence is opt-in, explicit and off by default.
+  #
+  #   campaign.agent.development.store.mode                    CAMPAIGN_AGENT_DEVELOPMENT_STORE_MODE
+  #   campaign.agent.development.store.url                     CAMPAIGN_AGENT_DEVELOPMENT_STORE_URL
+  #   campaign.agent.development.store.username                CAMPAIGN_AGENT_DEVELOPMENT_STORE_USERNAME
+  #   campaign.agent.development.store.password                CAMPAIGN_AGENT_DEVELOPMENT_STORE_PASSWORD
+  #   campaign.agent.development.store.schema                  CAMPAIGN_AGENT_DEVELOPMENT_STORE_SCHEMA
+  #   campaign.agent.development.store.maximum-pool-size       CAMPAIGN_AGENT_DEVELOPMENT_STORE_MAXIMUM_POOL_SIZE
+  #   campaign.agent.development.store.minimum-idle            CAMPAIGN_AGENT_DEVELOPMENT_STORE_MINIMUM_IDLE
+  #   campaign.agent.development.store.connection-timeout-ms   CAMPAIGN_AGENT_DEVELOPMENT_STORE_CONNECTION_TIMEOUT_MS
+  #   campaign.agent.development.store.validation-timeout-ms   CAMPAIGN_AGENT_DEVELOPMENT_STORE_VALIDATION_TIMEOUT_MS
+  #   campaign.agent.development.store.statement-timeout-ms    CAMPAIGN_AGENT_DEVELOPMENT_STORE_STATEMENT_TIMEOUT_MS
+  #   campaign.agent.development.store.lock-timeout-ms         CAMPAIGN_AGENT_DEVELOPMENT_STORE_LOCK_TIMEOUT_MS
+  #
+  # `mode` has exactly two values and defaults to IN_MEMORY. IN_MEMORY creates no persistence runtime;
+  # POSTGRESQL consumes the one `campaign.datasource` pool and MyBatis-Plus SqlSessionFactory and publishes
+  # exactly one CampaignConversationStore. The old connection fields above are deprecated compatibility keys;
+  # when omitted they inherit the canonical datasource, and when explicitly supplied they must match it. A host-supplied
+  # CampaignConversationStore bean always wins; more than one fails startup as an ambiguous wiring. A missing or
+  # out-of-bounds setting, a reserved schema or an unreachable server aborts startup with a bounded code, and no
+  # URL or credential is ever committed here or printed by any log, envelope or health surface.
+  # T34C: the genuine read-only PostgreSQL Segment Preview backend is opt-in, explicit and off by default.
+  #
+  #   campaign.agent.development.preview.postgres.enabled                     CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_ENABLED
+  #   campaign.agent.development.preview.postgres.url                         CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_URL
+  #   campaign.agent.development.preview.postgres.username                    CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_USERNAME
+  #   campaign.agent.development.preview.postgres.password                    CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_PASSWORD
+  #   campaign.agent.development.preview.postgres.schema                      CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_SCHEMA
+  #   campaign.agent.development.preview.postgres.sample-key                  CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_SAMPLE_KEY
+  #   campaign.agent.development.preview.postgres.storage-catalog-resource    CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_STORAGE_CATALOG_RESOURCE
+  #   campaign.agent.development.preview.postgres.backend-version             CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_BACKEND_VERSION
+  #   campaign.agent.development.preview.postgres.maximum-pool-size           CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_MAXIMUM_POOL_SIZE
+  #   campaign.agent.development.preview.postgres.minimum-idle                CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_MINIMUM_IDLE
+  #   campaign.agent.development.preview.postgres.connection-timeout-ms       CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_CONNECTION_TIMEOUT_MS
+  #   campaign.agent.development.preview.postgres.validation-timeout-ms       CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_VALIDATION_TIMEOUT_MS
+  #   campaign.agent.development.preview.postgres.statement-timeout-ms        CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_STATEMENT_TIMEOUT_MS
+  #   campaign.agent.development.preview.postgres.lock-timeout-ms             CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_LOCK_TIMEOUT_MS
+  #   campaign.agent.development.preview.postgres.idle-transaction-timeout-ms CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_IDLE_TRANSACTION_TIMEOUT_MS
+  #   campaign.agent.development.preview.postgres.query-timeout-seconds       CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_QUERY_TIMEOUT_SECONDS
+  #   campaign.agent.development.preview.postgres.fetch-size                  CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_FETCH_SIZE
+  #   campaign.agent.development.preview.postgres.max-rows                    CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_MAX_ROWS
+  #   campaign.agent.development.preview.postgres.max-data-watermark-age-seconds
+  #                                                                          CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_MAX_DATA_WATERMARK_AGE_SECONDS
+  #   campaign.agent.development.preview.postgres.required-database-product   CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_REQUIRED_DATABASE_PRODUCT
+  #   campaign.agent.development.preview.postgres.minimum-database-major-version
+  #                                                                          CAMPAIGN_AGENT_DEVELOPMENT_PREVIEW_POSTGRES_MINIMUM_DATABASE_MAJOR_VERSION
+  #
+  # `enabled` defaults to false, and while it is false the application creates no Preview pool, no storage
+  # catalog, no execution backend, no Preview service and no SegmentPreviewPort at all. Enabling it requires the
+  # complete dedicated PostgreSQL pool configuration above plus the host schema, the sample key and the bounded
+  # execution policy, and it publishes exactly one read-only Hikari pool named
+  # campaignAgentPreviewPostgresDataSource, exactly one server-owned StorageCatalog, exactly one exact-pin
+  # Metadata snapshot repository, exactly one PostgresPreviewExecutionBackend, exactly one PreviewSampleHasher,
+  # exactly one SegmentPreviewService and exactly one HostSafePreviewPort. The pool and every session are
+  # read-only (default_transaction_read_only=on, auto-commit disabled) with server-side statement, lock and
+  # idle-transaction timeouts; Preview never commits, never creates a schema, never runs a migration and never
+  # mutates a business table, because it reads an existing allowlisted host schema. A host-supplied pool or a
+  # host-supplied SegmentPreviewPort has documented precedence; a missing, malformed, non-PostgreSQL or
+  # unreachable configuration, and a host Preview port combined with this integration's own port, abort startup
+  # with a bounded code and a message that carries no credential, key, URL or host name. Nothing is committed
+  # here, and the environment-gated real-PostgreSQL integration test is skipped unless an operator supplies a
+  # dedicated database.
+  #
+  # T38: the development conversation transcript is opt-in, explicit and off by default. It exists ONLY inside
+  # the development Campaign host and is structurally excluded from the production Campaign host; it never
+  # weakens the accepted production audit redaction contract and must never be enabled in production.
+  #
+  #   campaign.agent.development.transcript.enabled    CAMPAIGN_AGENT_DEVELOPMENT_TRANSCRIPT_ENABLED
+  #   campaign.agent.development.transcript.directory  CAMPAIGN_AGENT_DEVELOPMENT_TRANSCRIPT_DIRECTORY
+  #
+  # `enabled` defaults to false and `directory` has no committed value. While it is false the application
+  # creates no transcript recorder file, no directory and no observation decorator effect: every decorator is a
+  # pure pass-through that returns the delegate's bytes unchanged, so routing, Skill resolution, Segment and Tool
+  # evidence stay byte-identical whether or not the transcript is on. Enabling it requires BOTH
+  # `campaign.agent.development.enabled=true` and an explicit directory, and an unusable, absent or symbolic-link
+  # directory aborts startup with one bounded, value-free code rather than silently recording nothing.
+  #
+  # When enabled, exactly one UTF-8 JSON Lines file per server-issued conversationId is appended under the named
+  # directory, containing the conversation creation identity, every submitted user turn with its message and
+  # typed clarification answers, every raw model response byte document (routing, routing schema repair, Skill
+  # input resolution, Segment Intent/model and Segment schema repair) attributed to the conversation that caused
+  # it, and every accepted or refused turn result with its revision, phase, route kind, code and bounded API
+  # projection. The file name is only the validated opaque conversation identifier, narrowed so no path
+  # separator, drive designator, alternate-data-stream colon or traversal component can be expressed; a symbolic
+  # link is refused; each event is appended as one complete buffered line so an earlier complete event is never
+  # overwritten; and a per-event and per-conversation size bound is declared and enforced.
+  #
+  # PRIVACY WARNING: the transcript deliberately stores SENSITIVE RAW TEXT — the user's submitted conversation
+  # and the raw model responses — because that is its purpose. It never stores credentials, authorization
+  # headers, endpoint URLs, model configuration, HTTP headers, stack traces, exception causes, SQL, member
+  # identifiers or provider secrets. It is durable debugging evidence ONLY: never production audit behavior,
+  # never trusted execution or authentication state, never model input, and never a substitute for the
+  # PostgreSQL conversation store, which remains the source of truth for resumable production state.
+  agent:
+    development:
+      enabled: false
+
+  # T35A1: the production OIDC identity boundary is opt-in and off by default.
+  #
+  # Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+  # relaxed-binding environment variables, and no credential, URL, issuer, JWK Set URI or production-like value
+  # is ever committed to this repository:
+  #
+  #   campaign.production.enabled                          CAMPAIGN_PRODUCTION_ENABLED
+  #   campaign.production.jwt.issuer-uri                   CAMPAIGN_PRODUCTION_JWT_ISSUER_URI
+  #   campaign.production.jwt.jwk-set-uri                  CAMPAIGN_PRODUCTION_JWT_JWK_SET_URI
+  #   campaign.production.jwt.audience                     CAMPAIGN_PRODUCTION_JWT_AUDIENCE
+  #   campaign.production.jwt.allowed-algorithms           CAMPAIGN_PRODUCTION_JWT_ALLOWED_ALGORITHMS
+  #   campaign.production.jwt.clock-skew                   CAMPAIGN_PRODUCTION_JWT_CLOCK_SKEW
+  #   campaign.production.jwt.max-issued-at-age            CAMPAIGN_PRODUCTION_JWT_MAX_ISSUED_AT_AGE
+  #   campaign.production.membership.mode                  CAMPAIGN_PRODUCTION_MEMBERSHIP_MODE
+  #   campaign.production.membership.url                   CAMPAIGN_PRODUCTION_MEMBERSHIP_URL
+  #   campaign.production.membership.username              CAMPAIGN_PRODUCTION_MEMBERSHIP_USERNAME
+  #   campaign.production.membership.password              CAMPAIGN_PRODUCTION_MEMBERSHIP_PASSWORD
+  #   campaign.production.membership.schema                CAMPAIGN_PRODUCTION_MEMBERSHIP_SCHEMA
+  #   campaign.production.membership.select-claim          CAMPAIGN_PRODUCTION_MEMBERSHIP_SELECT_CLAIM
+  #   campaign.production.membership.maximum-pool-size     CAMPAIGN_PRODUCTION_MEMBERSHIP_MAXIMUM_POOL_SIZE
+  #   campaign.production.membership.minimum-idle          CAMPAIGN_PRODUCTION_MEMBERSHIP_MINIMUM_IDLE
+  #   campaign.production.membership.connection-timeout-ms CAMPAIGN_PRODUCTION_MEMBERSHIP_CONNECTION_TIMEOUT_MS
+  #   campaign.production.membership.validation-timeout-ms CAMPAIGN_PRODUCTION_MEMBERSHIP_VALIDATION_TIMEOUT_MS
+  #   campaign.production.membership.statement-timeout-ms  CAMPAIGN_PRODUCTION_MEMBERSHIP_STATEMENT_TIMEOUT_MS
+  #   campaign.production.membership.lock-timeout-ms       CAMPAIGN_PRODUCTION_MEMBERSHIP_LOCK_TIMEOUT_MS
+  #   campaign.production.membership.query-timeout-ms      CAMPAIGN_PRODUCTION_MEMBERSHIP_QUERY_TIMEOUT_MS
+  #   campaign.production.membership.max-membership-rows   CAMPAIGN_PRODUCTION_MEMBERSHIP_MAX_MEMBERSHIP_ROWS
+  #   campaign.production.membership.max-permission-rows   CAMPAIGN_PRODUCTION_MEMBERSHIP_MAX_PERMISSION_ROWS
+  #
+  # `enabled` defaults to false, and while it is false the application creates no JWT decoder, no production
+  # DataSource, no Flyway runtime, no membership repository and no request-scoped trusted-context provider at
+  # all; the framework security layer is one explicit permit-all chain, so the health endpoint and the opt-in
+  # development Campaign host keep working exactly as before. Enabling it requires the exact issuer, the exact
+  # audience, an asymmetric algorithm allowlist, a bound clock skew and a bound issued-at age, and it publishes
+  # one stateless security chain in which `/api/v1/health` is public and `/api/v1/campaign-agent/**` and the
+  # future `/api/v1/operations/**` require a verified bearer token; failures are bounded JSON 401/403 envelopes
+  # that disclose no token, claim, issuer or decoder text. `membership.mode` has exactly two values and defaults
+  # to POSTGRESQL: POSTGRESQL consumes the shared `campaign.datasource` pool and MyBatis-Plus mapper, while HOST
+  # requires exactly one host ProductionMembershipRepository. A host-supplied repository has documented
+  # precedence; more than one fails startup as an ambiguous wiring. Enabling the development Campaign Agent host
+  # and this boundary together aborts startup with one bounded, redacted configuration code. A missing setting, a
+  # reserved schema, an unreachable JWK source or an unreachable server aborts startup with a bounded code, and
+  # no credential, URL, issuer, subject, selector, membership identifier or driver message is ever committed here
+  # or printed by any log, envelope or health surface. Membership facts and permissions come only from the
+  # server-owned directory, never from token roles or scopes, and the environment-gated live OIDC and PostgreSQL
+  # integration tests are skipped unless an operator supplies dedicated infrastructure.
+  production:
+    enabled: false
+
+    # T35A2: the production durable audit ledger is opt-in and off by default.
+    #
+    # Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+    # relaxed-binding environment variables, and no credential, URL, schema name or production-like value is ever
+    # committed to this repository:
+    #
+    #   campaign.production.audit.enabled                      CAMPAIGN_PRODUCTION_AUDIT_ENABLED
+    #   campaign.production.audit.ledger.url                   CAMPAIGN_PRODUCTION_AUDIT_LEDGER_URL
+    #   campaign.production.audit.ledger.username              CAMPAIGN_PRODUCTION_AUDIT_LEDGER_USERNAME
+    #   campaign.production.audit.ledger.password              CAMPAIGN_PRODUCTION_AUDIT_LEDGER_PASSWORD
+    #   campaign.production.audit.ledger.schema                CAMPAIGN_PRODUCTION_AUDIT_LEDGER_SCHEMA
+    #   campaign.production.audit.ledger.maximum-pool-size     CAMPAIGN_PRODUCTION_AUDIT_LEDGER_MAXIMUM_POOL_SIZE
+    #   campaign.production.audit.ledger.minimum-idle          CAMPAIGN_PRODUCTION_AUDIT_LEDGER_MINIMUM_IDLE
+    #   campaign.production.audit.ledger.connection-timeout-ms CAMPAIGN_PRODUCTION_AUDIT_LEDGER_CONNECTION_TIMEOUT_MS
+    #   campaign.production.audit.ledger.validation-timeout-ms CAMPAIGN_PRODUCTION_AUDIT_LEDGER_VALIDATION_TIMEOUT_MS
+    #   campaign.production.audit.ledger.statement-timeout-ms  CAMPAIGN_PRODUCTION_AUDIT_LEDGER_STATEMENT_TIMEOUT_MS
+    #   campaign.production.audit.ledger.lock-timeout-ms       CAMPAIGN_PRODUCTION_AUDIT_LEDGER_LOCK_TIMEOUT_MS
+    #   campaign.production.audit.ledger.idle-transaction-timeout-ms
+    #                                                          CAMPAIGN_PRODUCTION_AUDIT_LEDGER_IDLE_TRANSACTION_TIMEOUT_MS
+    #   campaign.production.audit.ledger.query-timeout-ms      CAMPAIGN_PRODUCTION_AUDIT_LEDGER_QUERY_TIMEOUT_MS
+    #   campaign.production.audit.ledger.max-batch-records     CAMPAIGN_PRODUCTION_AUDIT_LEDGER_MAX_BATCH_RECORDS
+    #   campaign.production.audit.ledger.max-source-document-chars
+    #                                                          CAMPAIGN_PRODUCTION_AUDIT_LEDGER_MAX_SOURCE_DOCUMENT_CHARS
+    #
+    # The ledger is inert unless `campaign.production.enabled=true` AND `audit.enabled=true`. While either is
+    # false the application creates no audit DataSource, no Flyway runtime, no migration run, no ledger and no
+    # adapter at all, so the accepted T35A1 identity boundary can be enabled on its own without durable audit
+    # existing. Enabling it consumes the shared `campaign.datasource` pool, unified Flyway run and MyBatis-Plus
+    # SqlSessionFactory, and publishes one append-only MyBatisPlusProductionAuditLedger and exactly one production adapter for each of the five accepted audit
+    # ports: security AuditSink, CampaignConversationAuditSink, LifecycleAuditSink, RuntimeAuditSink and
+    # ActionAuditSink. Every bean is explicitly named and qualified against the one shared business datasource.
+    # A host-supplied adapter of one port has documented
+    # precedence; more than one fails startup as an ambiguous wiring.
+    #
+    # The ledger is append-only: the only statements that ever run through this pool are one constant insert with
+    # `on conflict (logical_key) do nothing` and one constant identity lookup, so a committed audit row is never
+    # updated, deleted or truncated. Identifiers are stored only as domain-separated sha256 fingerprints, and no
+    # raw JWT, subject, member id, recipient address, prompt, model output, SQL, provider request body,
+    # credential, URL or unrestricted exception message has a column. An exact replay is idempotent; the same
+    # logical event with changed material is a bounded conflict; a batch is all-or-none; and the Action adapter
+    # compensates its staged batch with a real transaction rollback rather than a delete. A missing setting, a
+    # reserved schema or an unreachable server aborts startup with a bounded code that carries no credential, URL,
+    # schema name or driver message, and the environment-gated real-PostgreSQL migration and all-five-port
+    # integration test is skipped unless an operator supplies dedicated infrastructure.
+    audit:
+      enabled: false
+
+    # T35C1: the production Message and Reward Provider adapters are independently opt-in and off by default.
+    #
+    # A host supplies each enabled adapter's endpoint, explicit host allowlist, fixed provider/owner identities,
+    # credential and bounded transport settings through `campaign.production.provider.*` or relaxed-binding
+    # environment variables. Shared settings are `query-max-attempts`, `initial-backoff`, `max-backoff`,
+    # `evidence-max-age` and `gate-pins`; adapter settings under both `message` and `reward` are `enabled`,
+    # `require-https`, `endpoint`, `allowed-hosts`, `provider-id`, `owner-tenant-id`, `credential`, `api-version`,
+    # `connect-timeout`, `request-timeout`, `max-response-bytes`, `assert-business-key-idempotency` and
+    # `assert-reliable-query-by-key`. No endpoint, identity or credential is committed here.
+    #
+    # An enabled adapter accepts only its strict versioned request/response contract, never follows redirects,
+    # binds every effect to the fixed owner and business idempotency key, and reconciles an uncertain submission
+    # only through the bounded query-by-key contract. Configuration creates NOT_VERIFIED evidence only; LIVE
+    # readiness requires a current host-supplied verification of the exact configuration and capability hashes.
+    provider:
+      message:
+        enabled: false
+      reward:
+        enabled: false
+
+    # T35B: the production structured-model adapter is opt-in and off by default.
+    #
+    # Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+    # relaxed-binding environment variables, and no credential, endpoint, host name, model id or production-like
+    # value is ever committed to this repository:
+    #
+    #   campaign.production.model.enabled              CAMPAIGN_PRODUCTION_MODEL_ENABLED
+    #   campaign.production.model.require-https        CAMPAIGN_PRODUCTION_MODEL_REQUIRE_HTTPS
+    #   campaign.production.model.endpoint             CAMPAIGN_PRODUCTION_MODEL_ENDPOINT
+    #   campaign.production.model.allowed-hosts        CAMPAIGN_PRODUCTION_MODEL_ALLOWED_HOSTS
+    #   campaign.production.model.model-id             CAMPAIGN_PRODUCTION_MODEL_MODEL_ID
+    #   campaign.production.model.api-version          CAMPAIGN_PRODUCTION_MODEL_API_VERSION
+    #   campaign.production.model.credential           CAMPAIGN_PRODUCTION_MODEL_CREDENTIAL
+    #   campaign.production.model.connect-timeout      CAMPAIGN_PRODUCTION_MODEL_CONNECT_TIMEOUT
+    #   campaign.production.model.request-timeout      CAMPAIGN_PRODUCTION_MODEL_REQUEST_TIMEOUT
+    #   campaign.production.model.max-response-bytes   CAMPAIGN_PRODUCTION_MODEL_MAX_RESPONSE_BYTES
+    #   campaign.production.model.max-input-bytes      CAMPAIGN_PRODUCTION_MODEL_MAX_INPUT_BYTES
+    #   campaign.production.model.max-attempts         CAMPAIGN_PRODUCTION_MODEL_MAX_ATTEMPTS
+    #   campaign.production.model.initial-backoff      CAMPAIGN_PRODUCTION_MODEL_INITIAL_BACKOFF
+    #   campaign.production.model.max-backoff          CAMPAIGN_PRODUCTION_MODEL_MAX_BACKOFF
+    #   campaign.production.model.evidence-max-age     CAMPAIGN_PRODUCTION_MODEL_EVIDENCE_MAX_AGE
+    #   campaign.production.model.gate-pins            CAMPAIGN_PRODUCTION_MODEL_GATE_PINS
+    #
+    # `enabled` defaults to false, and while it is false the application creates no HTTP client, no adapter and
+    # no model evidence at all. Enabling it requires the complete bounded configuration above: an HTTPS endpoint
+    # whose host is named by the explicit allowlist, the exact model id, the one accepted Anthropic-compatible
+    # API version, the credential, the connect and request timeouts, the response and input byte limits and the
+    # bounded retry policy. The adapter sends only the bounded prompt and a deterministic parameter set, never
+    # streams, never declares a tool and never follows a redirect; it refuses a streamed, redirected, non-text,
+    # truncated, oversized, malformed or unsafe response and maps every failure to one bounded code that carries
+    # no credential, endpoint, model id, prompt or output. It retries only pre-acceptance transport faults, timeouts,
+    # rate limits and server errors, with bounded attempts and an injected backoff. It publishes bounded provider
+    # evidence — provider kind, a one-way model-id fingerprint, the contract version, a one-way configuration hash,
+    # the last live verification status/instant and the exact Gate pins — and configuration alone is never
+    # production evidence: the status stays NOT_VERIFIED unless an environment-gated live run publishes a
+    # verification of the exact configuration hash. The live model contract test is skipped unless an operator
+    # supplies the CAMPAIGN_PRODUCTION_MODEL_* variables, and the deterministic scripted HTTP server test is
+    # explicitly non-production evidence.
+    model:
+      enabled: false
+
+    # T35B: the production Campaign Agent host is opt-in and off by default.
+    #
+    # Nothing below has a value. A host supplies all of it through explicit configuration or the equivalent
+    # relaxed-binding environment variables, and no credential, URL, schema name, model, identity or
+    # production-like value is ever committed to this repository:
+    #
+    #   campaign.production.campaign-agent.enabled                       CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_ENABLED
+    #   campaign.production.campaign-agent.max-conversations             CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_MAX_CONVERSATIONS
+    #   campaign.production.campaign-agent.max-outcomes-per-conversation CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_MAX_OUTCOMES_PER_CONVERSATION
+    #   campaign.production.campaign-agent.retention                     CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_RETENTION
+    #   campaign.production.campaign-agent.schema-repair-enabled         CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_SCHEMA_REPAIR_ENABLED
+    #   campaign.production.campaign-agent.store.url                     CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_URL
+    #   campaign.production.campaign-agent.store.username                CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_USERNAME
+    #   campaign.production.campaign-agent.store.password                CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_PASSWORD
+    #   campaign.production.campaign-agent.store.schema                  CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_SCHEMA
+    #   campaign.production.campaign-agent.store.maximum-pool-size       CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_MAXIMUM_POOL_SIZE
+    #   campaign.production.campaign-agent.store.minimum-idle            CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_MINIMUM_IDLE
+    #   campaign.production.campaign-agent.store.connection-timeout-ms   CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_CONNECTION_TIMEOUT_MS
+    #   campaign.production.campaign-agent.store.validation-timeout-ms   CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_VALIDATION_TIMEOUT_MS
+    #   campaign.production.campaign-agent.store.statement-timeout-ms    CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_STATEMENT_TIMEOUT_MS
+    #   campaign.production.campaign-agent.store.lock-timeout-ms         CAMPAIGN_PRODUCTION_CAMPAIGN_AGENT_STORE_LOCK_TIMEOUT_MS
+    #
+    # `enabled` defaults to false, and while it is false the application creates no production conversation
+    # store, no identity source, no environment, no create/turn service and no Campaign Agent route mapping.
+    # Enabling it requires `campaign.production.enabled=true` (the T35A1 identity boundary), the T35A2 durable
+    # conversation audit adapter, the shared `campaign.datasource`, the one production
+    # structured model (`campaign.production.model.enabled=true`), exactly one genuine Preview port and exactly
+    # one production asset port plus exactly one production Segment asset port. The durable store and audit sink
+    # are resolved by their durable marker types, so an in-memory registry or the development in-memory sink can
+    # never satisfy them. Every missing, ambiguous or incompatible dependency aborts startup with one bounded,
+    # redacted code; no second model, fake Preview or development identity is ever substituted. Both accepted
+    # routes stay `POST /api/v1/campaign-agent/conversations` and `POST /api/v1/campaign-agent/turns`, no
+    # trusted field is read from the request body, identity comes only from the request-scoped T35A1 provider,
+    # the host is mutually exclusive with the development Campaign Agent host, and the repository's frozen Core
+    # Loyalty assets stay DEVELOPMENT_ONLY until exact human Gate approvals exist.
+    campaign-agent:
+      enabled: false
+
+    # T35C2: the production Runtime/Action/Provider host and its scheduler are separately opt-in.
+    #
+    # `enabled=false` creates no runtime graph, worker, executor or thread. Enabling the graph requires exactly
+    # one host-supplied DurableRuntimeStore and DurableActionStore with accepted PostgreSQL durability claims,
+    # the durable Runtime and Action audit adapters, the frozen Runtime/Audience/recipient ports, both production
+    # Provider adapters, one trusted bounded tenant source and one narrow observability port. This repository does
+    # not pretend to ship the large PostgreSQL Runtime/Action store implementations; absent or ambiguous durable
+    # host stores fail startup closed and no in-memory or simulated fallback is created.
+    #
+    # The configurable bounds are `lease-duration`, `fact-timeout-millis`, `materialization-freshness`,
+    # `claim-scan-limit`, `ingest-limit`, `runtime-attempts`, `runtime-backoff`, `submission-attempts`,
+    # `submission-backoff`, `verification-attempts`, `verification-backoff`, `scheduler-cadence`, `max-tenants`,
+    # `max-runtime-items-per-cycle` and `max-action-items-per-cycle`. `scheduler-enabled` remains false unless the
+    # host explicitly starts the single-thread, non-overlapping cycle. Topology configuration can support LOCAL
+    # evidence only; live scheduling, alerting and rollback remain blocked without separate operational proof.
+    provider-runtime:
+      enabled: false
+      scheduler-enabled: false
+
+# The pool and the migration run are logged through bounded surfaces only: Flyway uses the readiness slice's
+# redacting logger, and Hikari is held at WARN so a debug dump of its configuration can never print the URL.
+logging:
+  level:
+    com.zaxxer.hikari: WARN
+    org.flywaydb: WARN

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignPlanCompileIdempotencyMapper">
+
+    <!--
+      tryInsertIdempotency — INSERT an idempotency record, returning the inserted plan_id on success.
+      The ON CONFLICT on (idempotency_key) clause does a targeted select:
+        - same key + same hash: returns the existing plan_id (idempotent replay)
+        - same key + different hash: the conflict on the single column (idempotency_key) fires,
+          but we check proposal_hash to distinguish replay from conflict.
+    -->
+    <insert id="tryInsertIdempotency" parameterType="map">
+        INSERT INTO campaign_plan_compile_idempotency (idempotency_key, proposal_hash, plan_id)
+        VALUES (#{idempotencyKey}, #{proposalHash}, #{planId})
+        ON CONFLICT (idempotency_key) DO NOTHING
+    </insert>
+
+    <!--
+      findByIdempotencyKey — Look up the idempotency record by key, returning the stored proposal_hash and plan_id.
+      Used to detect: same key + same hash (replay) vs same key + different hash (conflict).
+    -->
+    <select id="findByIdempotencyKey" resultType="com.company.campaign.persistence.entity.CampaignPlanCompileIdempotencyEntity">
+        SELECT idempotency_key, proposal_hash, plan_id, created_at
+          FROM campaign_plan_compile_idempotency
+         WHERE idempotency_key = #{idempotencyKey}
+    </select>
+
+</mapper>

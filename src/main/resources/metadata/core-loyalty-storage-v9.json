@@ -1,0 +1,788 @@
+{
+    "attributes":  [
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "member.preferred_store_code",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "preferred_store_code"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "member.preferred_store_name",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "preferred_store_name"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "member.latest_positive_order_service_ba_code",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "latest_positive_order_employee_code"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "member.latest_positive_order_service_ba_name",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "latest_positive_order_employee_name"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "INTEGER",
+                           "definitionId":  "member.available_points",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "available_points"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "TIMESTAMP",
+                           "definitionId":  "member.registered_at",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "registered_at"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "INTEGER",
+                           "definitionId":  "member.birth_month",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "birth_month"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "ENUM",
+                           "definitionId":  "member.current_tier",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "current_tier_code"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "INTEGER",
+                           "definitionId":  "member.tier_qualification_points",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "tier_qualification_points"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "BOOLEAN",
+                           "definitionId":  "member.wechat_bound",
+                           "entitySchemaVersion":  "1.2",
+                           "subject":  "MEMBER",
+                           "valueColumn":  {
+                                               "value":  "wechat_bound"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "order_item.category_code",
+                           "entitySchemaVersion":  "1.4",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "category_code"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "order_item.category_name",
+                           "entitySchemaVersion":  "1.4",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "category_name"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "order_item.product_name",
+                           "entitySchemaVersion":  "1.4",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "product_name"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "STRING",
+                           "definitionId":  "order_item.sku_code",
+                           "entitySchemaVersion":  "1.4",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "sku_code"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "TIMESTAMP",
+                           "definitionId":  "tier_history.effective_from",
+                           "entitySchemaVersion":  "1.3",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "effective_from"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "TIMESTAMP",
+                           "definitionId":  "tier_history.effective_to",
+                           "entitySchemaVersion":  "1.3",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "effective_to"
+                                           }
+                       },
+                       {
+                           "currencyColumn":  null,
+                           "dataType":  "ENUM",
+                           "definitionId":  "tier_history.tier",
+                           "entitySchemaVersion":  "1.3",
+                           "subject":  "EVENT",
+                           "valueColumn":  {
+                                               "value":  "tier_code"
+                                           }
+                       }
+                   ],
+    "catalogVersion":  "core-loyalty-storage-9",
+    "dataScope":  {
+                      "memberIdColumn":  {
+                                             "value":  "member_id"
+                                         },
+                      "programColumn":  {
+                                            "value":  "program_id"
+                                        },
+                      "scopeIdColumn":  {
+                                            "value":  "scope_id"
+                                        },
+                      "table":  {
+                                    "schema":  {
+                                                   "value":  "public"
+                                               },
+                                    "table":  {
+                                                  "value":  "data_scope_members"
+                                              }
+                                },
+                      "tenantColumn":  {
+                                           "value":  "tenant_id"
+                                       }
+                  },
+    "entities":  [
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "EVENT",
+                                               "schemaVersion":  "1.3"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "tier_history_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_member_tier_history"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "EVENT",
+                                               "schemaVersion":  "1.4"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "order_item_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_order_item"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "EVENT",
+                                               "schemaVersion":  "1.5"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "point_entry_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_point_entry"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "MEMBER",
+                                               "schemaVersion":  "1.2"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_member"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "ORDER",
+                                               "schemaVersion":  "1.2"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "order_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_order"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "EVENT",
+                                               "schemaVersion":  "1.6"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "coupon_send_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_coupon_send"
+                                                 }
+                                   }
+                     },
+                     {
+                         "context":  {
+                                         "programColumn":  {
+                                                               "value":  "program_id"
+                                                           },
+                                         "tenantColumn":  {
+                                                              "value":  "tenant_id"
+                                                          }
+                                     },
+                         "entityVersion":  {
+                                               "entity":  "EVENT",
+                                               "schemaVersion":  "1.7"
+                                           },
+                         "primaryKeyColumn":  {
+                                                  "value":  "redemption_id"
+                                              },
+                         "table":  {
+                                       "schema":  {
+                                                      "value":  "public"
+                                                  },
+                                       "table":  {
+                                                     "value":  "seg_redemption"
+                                                 }
+                                   }
+                     }
+                 ],
+    "fxStrategy":  null,
+    "metrics":  [
+                    {
+                        "currencyColumn":  {
+                                               "value":  "currency_code"
+                                           },
+                        "currencyField":  "order.currency",
+                        "definitionId":  "order.gross_amount_sum",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order.paid_at",
+                        "filterColumns":  {
+                                              "order.order_type":  {
+                                                                       "value":  "order_type"
+                                                                   }
+                                          },
+                        "inputColumn":  {
+                                            "value":  "order_amount"
+                                        },
+                        "inputField":  "order.order_amount",
+                        "refundSupported":  false,
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "SUM"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  {
+                                               "value":  "currency_code"
+                                           },
+                        "currencyField":  "order.currency",
+                        "definitionId":  "order.paid_amount_sum",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order.paid_at",
+                        "filterColumns":  {
+                                              "order.order_type":  {
+                                                                       "value":  "order_type"
+                                                                   }
+                                          },
+                        "inputColumn":  {
+                                            "value":  "paid_amount"
+                                        },
+                        "inputField":  "order.paid_amount",
+                        "refundSupported":  false,
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "SUM"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "order.positive_count",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order.paid_at",
+                        "filterColumns":  {
+                                              "order.order_type":  {
+                                                                       "value":  "order_type"
+                                                                   }
+                                          },
+                        "inputColumn":  null,
+                        "inputField":  null,
+                        "refundSupported":  false,
+                        "relationId":  "member.orders",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "COUNT"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  {
+                                               "value":  "currency_code"
+                                           },
+                        "currencyField":  "order_item.currency",
+                        "definitionId":  "order_item.line_paid_amount_sum",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order_item.paid_at",
+                        "filterColumns":  {
+                                              "order_item.order_type":  {
+                                                                            "value":  "order_type"
+                                                                        }
+                                          },
+                        "inputColumn":  {
+                                            "value":  "line_paid_amount"
+                                        },
+                        "inputField":  "order_item.line_paid_amount",
+                        "refundSupported":  false,
+                        "relationId":  "member.order_items",
+                        "resultType":  "MONEY",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "SUM"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "order_item.quantity_sum",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order_item.paid_at",
+                        "filterColumns":  {
+                                              "order_item.order_type":  {
+                                                                            "value":  "order_type"
+                                                                        }
+                                          },
+                        "inputColumn":  {
+                                            "value":  "quantity"
+                                        },
+                        "inputField":  "order_item.quantity",
+                        "refundSupported":  false,
+                        "relationId":  "member.order_items",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "SUM"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "point.entry_count",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "occurred_at"
+                                            },
+                        "eventTimeField":  "point_entry.occurred_at",
+                        "filterColumns":  {
+                                              "point_entry.point_type":  {
+                                                                             "value":  "point_type"
+                                                                         }
+                                          },
+                        "inputColumn":  null,
+                        "inputField":  null,
+                        "refundSupported":  false,
+                        "relationId":  "member.point_entries",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "COUNT"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "order.return_count",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order.paid_at",
+                        "filterColumns":  {
+                                              "order.order_type":  {
+                                                                       "value":  "order_type"
+                                                                   }
+                                          },
+                        "inputColumn":  null,
+                        "inputField":  null,
+                        "refundSupported":  false,
+                        "relationId":  "member.orders",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "COUNT"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  {
+                                               "value":  "currency_code"
+                                           },
+                        "currencyField":  "order.currency",
+                        "definitionId":  "order.return_paid_amount_sum",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "paid_at"
+                                            },
+                        "eventTimeField":  "order.paid_at",
+                        "filterColumns":  {
+                                              "order.order_type":  {
+                                                                       "value":  "order_type"
+                                                                   }
+                                          },
+                        "inputColumn":  {
+                                            "value":  "paid_amount"
+                                        },
+                        "inputField":  "order.paid_amount",
+                        "refundSupported":  false,
+                        "relationId":  "member.orders",
+                        "resultType":  "MONEY",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "SUM"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "coupon.successful_send_count",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "created_at"
+                                            },
+                        "eventTimeField":  "coupon_send.created_at",
+                        "filterColumns":  {
+                                              "coupon_send.send_status":  {
+                                                                              "value":  "send_status"
+                                                                          }
+                                          },
+                        "inputColumn":  null,
+                        "inputField":  null,
+                        "refundSupported":  false,
+                        "relationId":  "member.coupon_sends",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "COUNT"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    },
+                    {
+                        "currencyColumn":  null,
+                        "currencyField":  null,
+                        "definitionId":  "redemption.count",
+                        "entitySchemaVersion":  "1.2",
+                        "eventTimeColumn":  {
+                                                "value":  "payment_at"
+                                            },
+                        "eventTimeField":  "redemption.payment_at",
+                        "filterColumns":  {
+                                              "redemption.record_type":  {
+                                                                             "value":  "record_type"
+                                                                         }
+                                          },
+                        "inputColumn":  null,
+                        "inputField":  null,
+                        "refundSupported":  false,
+                        "relationId":  "member.redemptions",
+                        "resultType":  "INTEGER",
+                        "subject":  "MEMBER",
+                        "supportedAggregates":  [
+                                                    "COUNT"
+                                                ],
+                        "supportedEmptySetBehaviors":  [
+                                                           "ZERO"
+                                                       ]
+                    }
+                ],
+    "refundStorage":  null,
+    "relations":  [
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.order_items",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "EVENT",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "paid_at"
+                                                    },
+                          "targetEventTimeField":  "order_item.paid_at",
+                          "targetJoinField":  "target.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.4"
+                      },
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.orders",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "ORDER",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "paid_at"
+                                                    },
+                          "targetEventTimeField":  "order.paid_at",
+                          "targetJoinField":  "order.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.2"
+                      },
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.point_entries",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "EVENT",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "occurred_at"
+                                                    },
+                          "targetEventTimeField":  "point_entry.occurred_at",
+                          "targetJoinField":  "target.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.5"
+                      },
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.tier_history",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "EVENT",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "effective_from"
+                                                    },
+                          "targetEventTimeField":  "tier_history.effective_from",
+                          "targetJoinField":  "target.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.3"
+                      },
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.coupon_sends",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "EVENT",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "created_at"
+                                                    },
+                          "targetEventTimeField":  "coupon_send.created_at",
+                          "targetJoinField":  "coupon_send.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.6"
+                      },
+                      {
+                          "joinKind":  "CORRELATED_BY_SOURCE_KEY",
+                          "relationId":  "member.redemptions",
+                          "sourceEntity":  "MEMBER",
+                          "sourceJoinField":  "member.id",
+                          "sourceKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "sourceSchemaVersion":  "1.2",
+                          "targetEntity":  "EVENT",
+                          "targetEventTimeColumn":  {
+                                                        "value":  "payment_at"
+                                                    },
+                          "targetEventTimeField":  "redemption.payment_at",
+                          "targetJoinField":  "redemption.member_id",
+                          "targetKeyColumn":  {
+                                                  "value":  "member_id"
+                                              },
+                          "targetSchemaVersion":  "1.7"
+                      }
+                  ]
+}

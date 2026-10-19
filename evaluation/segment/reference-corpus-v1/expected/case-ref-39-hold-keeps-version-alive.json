@@ -1,0 +1,1 @@
+{"caseId":"case-ref-39-hold-keeps-version-alive","expectedIssueCodes":[],"expectedOutcome":"REJECTED_ACTIVE_HOLD","membership":[],"retention":{"activeHoldCount":1,"outcome":"REJECTED_ACTIVE_HOLD"},"schemaVersion":"1.3"}

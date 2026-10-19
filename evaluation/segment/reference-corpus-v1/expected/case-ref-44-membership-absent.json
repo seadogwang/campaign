@@ -1,0 +1,1 @@
+{"caseId":"case-ref-44-membership-absent","expectedIssueCodes":[],"expectedOutcome":"ABSENT","membership":[{"outcome":"ABSENT","pin":{"audienceId":"audience-loyalty-bronze","versionHash":"sha256:f61a53833b1cbe2c9d0de649f3b5d55e18f734a50952fb38393f3a2b563e7cba","versionId":"av-bronze-001"}}],"schemaVersion":"1.3"}

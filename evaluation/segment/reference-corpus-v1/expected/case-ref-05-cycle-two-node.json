@@ -1,0 +1,1 @@
+{"caseId":"case-ref-05-cycle-two-node","expectedIssueCodes":["SEGMENT_REFERENCE_CYCLE_DETECTED"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

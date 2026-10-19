@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.ReadinessAuditMapper">
+
+    <insert id="insertAudit">
+        INSERT INTO readiness_audit (tenant_id, program_id, environment, format_version, action,
+                                     disposition, reason_code, occurred_at, actor_ref, request_correlation,
+                                     requirement_code, status_transition, evidence_identity_hash,
+                                     subject_fingerprint, assessment_hash, committed_revision)
+        VALUES (#{tenantId}, #{programId}, #{environment}, #{formatVersion}, #{action},
+                #{disposition}, #{reasonCode, jdbcType=VARCHAR}, #{occurredAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{actorRef}, #{requestCorrelation}, #{requirementCode, jdbcType=VARCHAR},
+                #{statusTransition, jdbcType=VARCHAR}, #{evidenceIdentityHash, jdbcType=VARCHAR},
+                #{subjectFingerprint, jdbcType=VARCHAR}, #{assessmentHash, jdbcType=VARCHAR},
+                #{committedRevision})
+    </insert>
+
+    <select id="selectAuditEvents" resultType="com.company.campaign.persistence.entity.ReadinessAuditEntity">
+        SELECT format_version, action, disposition, reason_code, occurred_at, actor_ref,
+               request_correlation, requirement_code, status_transition, evidence_identity_hash,
+               subject_fingerprint, assessment_hash
+          FROM readiness_audit
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+         ORDER BY audit_id ASC
+    </select>
+
+</mapper>

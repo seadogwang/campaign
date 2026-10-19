@@ -1,0 +1,1 @@
+{"caseId":"case-ref-06-cycle-deep","expectedIssueCodes":["SEGMENT_REFERENCE_CYCLE_DETECTED"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

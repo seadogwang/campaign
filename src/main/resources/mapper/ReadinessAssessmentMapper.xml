@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.ReadinessAssessmentMapper">
+
+    <!--
+      selectAssessmentHash — Read the canonical assessment hash for one assessment id.
+      Used to decide whether an incoming append is a duplicate or a conflict.
+    -->
+    <select id="selectAssessmentHash" resultType="java.lang.String">
+        SELECT assessment_hash
+          FROM readiness_assessment
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+           AND assessment_id = #{assessmentId}
+    </select>
+
+    <!--
+      insertAssessment — Append one readiness assessment.
+      accepted_evidence_json and blockers_json are bounded canonical JSON documents;
+      every other column is a bounded scalar or hash.
+    -->
+    <insert id="insertAssessment">
+        INSERT INTO readiness_assessment (tenant_id, program_id, environment, assessment_id,
+               format_version, level, status, evaluated_at, accepted_evidence_json, blockers_json,
+               assessment_hash, committed_revision)
+        VALUES (#{tenantId}, #{programId}, #{environment}, #{assessmentId},
+                #{formatVersion}, #{level}, #{status},
+                #{evaluatedAt, jdbcType=TIMESTAMP_WITH_TIMEZONE},
+                #{acceptedEvidenceJson}, #{blockersJson},
+                #{assessmentHash}, #{committedRevision})
+    </insert>
+
+    <!--
+      selectLatestAssessment — Read the most recent assessment for one level in one scope.
+      Ordered by committed_revision DESC, assessment_id ASC so the latest write sorts first.
+    -->
+    <select id="selectLatestAssessment"
+            resultType="com.company.campaign.persistence.entity.ReadinessAssessmentEntity">
+        SELECT assessment_id, format_version, level, status, evaluated_at, accepted_evidence_json,
+               blockers_json, assessment_hash
+          FROM readiness_assessment
+         WHERE tenant_id = #{tenantId}
+           AND program_id = #{programId}
+           AND environment = #{environment}
+           AND level = #{level}
+         ORDER BY committed_revision DESC, assessment_id ASC
+    </select>
+
+</mapper>

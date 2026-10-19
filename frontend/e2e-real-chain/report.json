@@ -1,0 +1,223 @@
+{
+  "config": {
+    "argv": [
+      "C:\\nvm4w\\nodejs\\node.exe",
+      "D:\\Project\\campaign\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "--config=e2e-real-chain/runner.config.ts",
+      "e2e-real-chain/smoke.spec.ts"
+    ],
+    "configFile": "D:\\Project\\campaign\\frontend\\e2e-real-chain\\runner.config.ts",
+    "rootDir": "D:/Project/campaign/frontend/e2e-real-chain",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/Project/campaign/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "D:/Project/campaign/frontend/e2e-real-chain",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 900000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "D:\\Project\\campaign\\frontend\\test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "name": "",
+        "testDir": "D:\\Project\\campaign\\frontend\\e2e-real-chain",
+        "snapshotDir": "D:\\Project\\campaign\\frontend\\e2e-real-chain",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 900000,
+        "use": {
+          "baseURL": "http://127.0.0.1:5173",
+          "channel": "msedge",
+          "launchOptions": {},
+          "headless": true,
+          "trace": "off",
+          "video": "off",
+          "screenshot": "off"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "smoke.spec.ts",
+      "file": "smoke.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Smoke: real-chain runner validation",
+          "file": "smoke.spec.ts",
+          "line": 76,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Smoke 1: scenario with clarification",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 600000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 600078,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 600000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 600000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 600000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "D:\\Project\\campaign\\frontend\\e2e-real-chain\\smoke.spec.ts",
+                            "column": 47,
+                            "line": 64
+                          },
+                          "message": "Error: locator.click: Test timeout of 600000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByTestId('conversation-send')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"submit\" aria-label=\"Send message\" class=\"button button--primary\" data-testid=\"conversation-send\">↑</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not enabled\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    1146 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m         - element is not enabled\u001b[22m\n\u001b[2m       - retrying click action\u001b[22m\n\u001b[2m         - waiting 500ms\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n\n  62 |   const composer = page.getByLabel('Message the Campaign assistant')\n  63 |   await composer.fill(message)\n> 64 |   await page.getByTestId('conversation-send').click()\n     |                                               ^\n  65 |   // Wait for pending to resolve\n  66 |   try {\n  67 |     await page.waitForFunction(\n    at sendMessage (D:\\Project\\campaign\\frontend\\e2e-real-chain\\smoke.spec.ts:64:47)\n    at D:\\Project\\campaign\\frontend\\e2e-real-chain\\smoke.spec.ts:83:5"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-18T01:16:43.686Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "D:\\Project\\campaign\\frontend\\test-results\\smoke-Smoke-real-chain-run-e7167-scenario-with-clarification\\error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-36cee7b0dd6f17e53134",
+              "file": "smoke.spec.ts",
+              "line": 77,
+              "column": 3
+            },
+            {
+              "title": "Smoke 2: complete flow with FINALIZE",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 900000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "",
+                  "projectName": "",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "parallelIndex": -1,
+                      "status": "failed",
+                      "duration": 0,
+                      "error": {
+                        "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                      },
+                      "errors": [
+                        {
+                          "message": "Error: worker process exited unexpectedly (code=3221225794, signal=null)"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-18T01:26:44.929Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "4219922fea2e2bd3c691-0c77c0ce38082956c008",
+              "file": "smoke.spec.ts",
+              "line": 109,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T01:16:43.077Z",
+    "duration": 601855.086,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

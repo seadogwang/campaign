@@ -1,0 +1,1 @@
+{"caseId":"case-ref-08-depth-exceeded","expectedIssueCodes":["SEGMENT_REFERENCE_DEPTH_EXCEEDED"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

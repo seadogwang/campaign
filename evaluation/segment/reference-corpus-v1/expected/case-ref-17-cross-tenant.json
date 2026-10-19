@@ -1,0 +1,1 @@
+{"caseId":"case-ref-17-cross-tenant","expectedIssueCodes":["SEGMENT_REFERENCE_VERSION_NOT_FOUND"],"expectedOutcome":"REJECTED","membership":[],"schemaVersion":"1.3"}

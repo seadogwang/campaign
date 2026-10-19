@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignMembershipMapper">
+
+    <!--
+      findActiveMembership — Look up the ACTIVE membership row for one verified issuer + subject
+      and an optional selection key.  Uses IS NOT DISTINCT FROM so the same statement works with
+      both a concrete value and a NULL selection key — no SQL concatenation ever.
+    -->
+    <select id="findActiveMembership"
+            resultType="com.company.campaign.persistence.entity.CampaignMembershipEntity">
+        select membership_id, issuer, subject, user_id, tenant_id, program_id, data_scope_id, status,
+               valid_from, valid_until, metadata_snapshot_id, locale, timezone, reporting_currency,
+               as_of, data_watermark
+          from campaign_membership
+         where issuer = #{issuer}
+           and subject = #{subject}
+           and selection_key is not distinct from #{selectionKey, jdbcType=VARCHAR}
+           and status = 'ACTIVE'
+         order by membership_id
+    </select>
+
+</mapper>

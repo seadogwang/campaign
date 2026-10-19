@@ -1,0 +1,149 @@
+package com.company.campaign.evaluation.journey.t20;
+
+import com.company.campaign.shared.canonical.CanonicalJson;
+import com.company.campaign.shared.canonical.ContentHash;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public final class T20EvaluationLoader {
+
+    public static final String SCHEMA_VERSION = "1.0";
+    public static final String ASSET_VERSION = "t20-v1";
+    public static final String MANIFEST_ASSET_ID = "journey-t20-manifest";
+    public static final String CASES_ASSET_ID = "journey-t20-cases";
+    public static final String ROOT_REFERENCE = "evaluation/journey/t20-v1";
+    public static final String MANIFEST_REFERENCE = ROOT_REFERENCE + "/manifest.json";
+    public static final String CASES_REFERENCE = ROOT_REFERENCE + "/cases.json";
+
+    private static final Set<String> EXPECTED_FILES = Set.of("manifest.json", "cases.json");
+    private static final String MANIFEST_HASH_FIELD = "manifestHash";
+    private static final CanonicalJson JSON = new CanonicalJson();
+    private static final TypeReference<Map<String, Object>> OBJECT = new TypeReference<>() {
+    };
+
+    private final Path repositoryRoot;
+    private final Path evaluationRoot;
+
+    public T20EvaluationLoader(Path repositoryRoot) {
+        this.repositoryRoot = Objects.requireNonNull(repositoryRoot, "repositoryRoot")
+                .toAbsolutePath().normalize();
+        this.evaluationRoot = this.repositoryRoot.resolve(ROOT_REFERENCE).normalize();
+        if (!evaluationRoot.startsWith(this.repositoryRoot) || evaluationRoot.equals(this.repositoryRoot)) {
+            throw invalidSet();
+        }
+    }
+
+    public T20EvaluationCorpus loadCorpus() {
+        requireExactFileSet();
+        byte[] manifestBytes = read(repositoryRoot.resolve(MANIFEST_REFERENCE));
+        Map<String, Object> manifestObject = strictObject(manifestBytes);
+        requireCanonical(manifestBytes, manifestObject);
+        requireManifestHash(manifestObject);
+        T20EvaluationManifest manifest = strictRead(manifestBytes, T20EvaluationManifest.class);
+
+        byte[] casesBytes = read(repositoryRoot.resolve(CASES_REFERENCE));
+        Map<String, Object> casesObject = strictObject(casesBytes);
+        requireCanonical(casesBytes, casesObject);
+        T20EvaluationCases cases = strictRead(casesBytes, T20EvaluationCases.class);
+        if (!manifest.casesHash().equals(ContentHash.sha256(casesBytes))) {
+            throw new T20EvaluationException(
+                    T20EvaluationErrorCodes.ASSET_HASH_MISMATCH,
+                    "The T20 cases asset does not match its pinned hash.");
+        }
+        return new T20EvaluationCorpus(manifest, cases);
+    }
+
+    private void requireExactFileSet() {
+        try (var files = Files.list(evaluationRoot)) {
+            Set<String> actual = files
+                    .filter(Files::isRegularFile)
+                    .map(path -> path.getFileName().toString())
+                    .collect(Collectors.toUnmodifiableSet());
+            if (!EXPECTED_FILES.equals(actual)) {
+                throw invalidSet();
+            }
+        } catch (IOException exception) {
+            throw new T20EvaluationException(
+                    T20EvaluationErrorCodes.ASSET_UNREADABLE,
+                    "The T20 evaluation asset set cannot be read.", exception);
+        }
+    }
+
+    private static void requireManifestHash(Map<String, Object> full) {
+        Object declared = full.get(MANIFEST_HASH_FIELD);
+        if (!(declared instanceof String text)) {
+            throw manifestHashMismatch();
+        }
+        ContentHash expected;
+        try {
+            expected = new ContentHash(text);
+        } catch (RuntimeException exception) {
+            throw manifestHashMismatch();
+        }
+        Map<String, Object> material = new LinkedHashMap<>(full);
+        material.remove(MANIFEST_HASH_FIELD);
+        if (!expected.equals(JSON.hash(material))) {
+            throw manifestHashMismatch();
+        }
+    }
+
+    private static byte[] read(Path path) {
+        try {
+            return Files.readAllBytes(path);
+        } catch (IOException exception) {
+            throw new T20EvaluationException(
+                    T20EvaluationErrorCodes.ASSET_UNREADABLE,
+                    "A T20 evaluation asset cannot be read.", exception);
+        }
+    }
+
+    private static Map<String, Object> strictObject(byte[] bytes) {
+        try {
+            return JSON.read(new String(bytes, StandardCharsets.UTF_8), OBJECT);
+        } catch (RuntimeException exception) {
+            throw nonCanonical(exception);
+        }
+    }
+
+    private static <T> T strictRead(byte[] bytes, Class<T> type) {
+        try {
+            return JSON.read(new String(bytes, StandardCharsets.UTF_8), type);
+        } catch (RuntimeException exception) {
+            throw nonCanonical(exception);
+        }
+    }
+
+    private static void requireCanonical(byte[] bytes, Map<String, Object> parsed) {
+        if (!Arrays.equals(bytes, JSON.write(parsed))) {
+            throw nonCanonical(null);
+        }
+    }
+
+    private static T20EvaluationException nonCanonical(Throwable cause) {
+        return new T20EvaluationException(
+                T20EvaluationErrorCodes.ASSET_NON_CANONICAL,
+                "A T20 evaluation asset is not strict canonical JSON.", cause);
+    }
+
+    private static T20EvaluationException invalidSet() {
+        return new T20EvaluationException(
+                T20EvaluationErrorCodes.ASSET_SET_INVALID,
+                "The T20 evaluation directory must contain exactly the frozen asset set.");
+    }
+
+    private static T20EvaluationException manifestHashMismatch() {
+        return new T20EvaluationException(
+                T20EvaluationErrorCodes.MANIFEST_HASH_MISMATCH,
+                "The T20 evaluation manifest hash is invalid.");
+    }
+}

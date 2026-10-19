@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.campaign.persistence.mapper.CampaignProductionAuditLedgerMapper">
+
+    <!--
+      insertAuditEntry — Append one bounded audit row.  A conflicting logical_key is a no-op;
+      the caller then uses findExistingDocumentHash to decide whether it was an exact replay.
+    -->
+    <insert id="insertAuditEntry">
+        insert into campaign_production_audit_ledger (
+            logical_key, event_id, domain, event_type, format_version,
+            tenant_fingerprint, program_fingerprint, resource_fingerprint,
+            disposition_code, reason_code, action_code, topic_code,
+            source_hash, source_document, document_hash, occurred_at)
+        values (#{logicalKey}, #{eventId}, #{domain}, #{eventType}, #{formatVersion},
+                #{tenantFingerprint, jdbcType=VARCHAR}, #{programFingerprint, jdbcType=VARCHAR},
+                #{resourceFingerprint, jdbcType=VARCHAR},
+                #{dispositionCode, jdbcType=VARCHAR}, #{reasonCode, jdbcType=VARCHAR},
+                #{actionCode, jdbcType=VARCHAR}, #{topicCode, jdbcType=VARCHAR},
+                #{sourceHash, jdbcType=VARCHAR}, #{sourceDocument},
+                #{documentHash},
+                #{occurredAt, jdbcType=TIMESTAMP_WITH_TIMEZONE})
+        on conflict (logical_key) do nothing
+    </insert>
+
+    <!--
+      findExistingDocumentHash — Read the committed document hash for one logical event key.
+      An exact replay carries the same hash; anything else is a bounded conflict.
+    -->
+    <select id="findExistingDocumentHash" resultType="java.lang.String">
+        select document_hash
+          from campaign_production_audit_ledger
+         where logical_key = #{logicalKey}
+    </select>
+
+</mapper>
